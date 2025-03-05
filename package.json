@@ -4,7 +4,9 @@
   "description": "6COSC022W Coursework 1 (2024/25)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:dev": "cross-env NODE_ENV=development node ./config/app.config.js",
+    "start:watch:dev": "cross-env NODE_ENV=development nodemon ./config/app.config.js",
+    "start:watch:prod": "cross-env NODE_ENV=production nodemon ./config/app.config.js"
   },
   "repository": {
     "type": "git",
@@ -18,7 +20,12 @@
   },
   "homepage": "https://github.com/saumyaakumarasinghe/6COSC022W-w1810569-20191250#readme",
   "dependencies": {
+    "6cosc022w-w1810569-20191250": "file:",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   }
 }
