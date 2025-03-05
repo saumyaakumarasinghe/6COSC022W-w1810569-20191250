@@ -6,7 +6,10 @@
   "scripts": {
     "start:dev": "cross-env NODE_ENV=development node ./config/app.config.js",
     "start:watch:dev": "cross-env NODE_ENV=development nodemon ./config/app.config.js",
-    "start:watch:prod": "cross-env NODE_ENV=production nodemon ./config/app.config.js"
+    "start:watch:prod": "cross-env NODE_ENV=production nodemon ./config/app.config.js",
+    "migrate": "sequelize-cli db:migrate",
+    "migrate:undo": "sequelize-cli db:migrate:undo",
+    "migrate:reset": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate"
   },
   "repository": {
     "type": "git",
@@ -21,10 +24,14 @@
   "homepage": "https://github.com/saumyaakumarasinghe/6COSC022W-w1810569-20191250#readme",
   "dependencies": {
     "6cosc022w-w1810569-20191250": "file:",
+    "body-parser": "^1.20.3",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "nodemon": "^3.1.9",
+    "sequelize": "^6.37.6",
+    "sequelize-cli": "^6.6.2",
+    "sqlite3": "^5.1.7",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   }
