@@ -12,4 +12,4 @@ function connected(err) {
     console.log("Connected to the database");
 }
 
-exports.module = { DB }
+module.exports = DB 
