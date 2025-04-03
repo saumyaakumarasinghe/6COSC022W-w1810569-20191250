@@ -4,6 +4,7 @@ const swaggerDocs = require("../config/swagger.config");
 const routesV1 = require("../routes/v1");
 const bodyParser = require('body-parser');
 const { DB } = require('../config/database.config')
+const cors = require('cors')
 
 // determine which env file to load
 const envFile = process.env.NODE_ENV === "production" ? ".env.prod" : ".env.dev";
@@ -11,6 +12,14 @@ dotenv.config({ path: envFile });
 
 const app = express();
 const PORT = process.env.PORT;
+
+app.use(cors())
+
+// Middleware to log incoming requests
+app.use((req, res, next) => {
+    console.log(`Request Method: ${req.method}, Request URL: ${req.originalUrl}`);
+    next(); // Pass control to the next middleware or route handler
+});
 
 // middleware to parse JSON and form data
 app.use(bodyParser.json());
