@@ -1,6 +1,7 @@
 const { ROLE } = require('../constants');
 const userDao = require('../dao/user.dao');
 const { hashPassword, comparePassword } = require('./password.service');
+const { generateToken } = require('./token.service');
 
 const login = async (req, res) => {
   try {
@@ -18,7 +19,21 @@ const login = async (req, res) => {
     const loggedIn = await comparePassword(password, existUser.password);
     if (!loggedIn) return res.status(500).json('Invalid request credentials!');
 
-    res.status(200).json('Login successful');
+    // create token
+    const tokenPayload = {
+      userId: existUser.id,
+      role: existUser.role,
+      status: existUser.status,
+      lastActiveAt: existUser.lastActiveAt,
+    };
+    const token = await generateToken(tokenPayload);
+
+    const payload = {
+      message: 'Login successful',
+      userId: tokenPayload.userId,
+      token,
+    };
+    res.status(200).json(payload);
   } catch (err) {
     console.log(err.message);
   }
