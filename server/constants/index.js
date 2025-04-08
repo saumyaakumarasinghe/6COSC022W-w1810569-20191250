@@ -1,7 +1,7 @@
 const ENVIRONMENTS = {
-    PROD: 'prod',
-    DEV: 'dev'
-}
+  PROD: 'prod',
+  DEV: 'dev',
+};
 
 const ROLE = Object.freeze({
   ADMIN: 'ADMIN',

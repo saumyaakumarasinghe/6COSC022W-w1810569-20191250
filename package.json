@@ -1,0 +1,27 @@
+{
+  "name": "6cosc022w-w1810569-20191250",
+  "version": "1.0.0",
+  "description": "6COSC022W Coursework 1 (2024/25)",
+  "scripts": {
+    "format:fix": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saumyaakumarasinghe/6COSC022W-w1810569-20191250.git"
+  },
+  "author": "Saumya Kumarasinghe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saumyaakumarasinghe/6COSC022W-w1810569-20191250/issues"
+  },
+  "homepage": "https://github.com/saumyaakumarasinghe/6COSC022W-w1810569-20191250#readme",
+  "dependencies": {
+    "husky": "^9.1.7"
+  },
+  "devDependencies": {
+    "@commitlint/config-conventional": "^19.8.0",
+    "prettier": "^3.5.3"
+  }
+}

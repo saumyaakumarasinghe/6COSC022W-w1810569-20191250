@@ -1,12 +1,12 @@
 {
-  "name": "6cosc022w-w1810569-20191250",
+  "name": "server-side",
   "version": "1.0.0",
-  "description": "6COSC022W Coursework 1 (2024/25)",
+  "description": "6COSC022W Coursework 1 (2024/25) Server-Side",
   "main": "index.js",
   "scripts": {
-    "start:dev": "cross-env NODE_ENV=development node app.js",
-    "start:watch:dev": "cross-env NODE_ENV=development nodemon app.js",
-    "start:watch:prod": "cross-env NODE_ENV=production nodemon app.js",
+    "start:": "cross-env NODE_ENV=development node app.js",
+    "start:dev": "cross-env NODE_ENV=development nodemon app.js",
+    "startS:prod": "cross-env NODE_ENV=production nodemon app.js",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "migrate": "sequelize-cli db:migrate",
@@ -20,7 +20,7 @@
     "url": "git+https://github.com/saumyaakumarasinghe/6COSC022W-w1810569-20191250.git"
   },
   "keywords": [],
-  "author": "A.L.S.D.Kumarasinghe",
+  "author": "Saumya Kumarasinghe",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/saumyaakumarasinghe/6COSC022W-w1810569-20191250/issues"
