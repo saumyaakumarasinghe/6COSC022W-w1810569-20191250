@@ -1,12 +1,12 @@
 {
   "development": {
     "dialect": "sqlite",
-    "storage": "../database.db",
+    "storage": "./database/database.db",
     "logging": true
   },
   "production": {
     "dialect": "sqlite",
-    "storage": "../database.db",
+    "storage": "./database/database.db",
     "logging": false
   }
 }

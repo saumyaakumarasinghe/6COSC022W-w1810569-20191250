@@ -4,12 +4,16 @@
   "description": "6COSC022W Coursework 1 (2024/25)",
   "main": "index.js",
   "scripts": {
-    "start:dev": "cross-env NODE_ENV=development node ./config/app.config.js",
-    "start:watch:dev": "cross-env NODE_ENV=development nodemon ./config/app.config.js",
-    "start:watch:prod": "cross-env NODE_ENV=production nodemon ./config/app.config.js",
+    "start:dev": "cross-env NODE_ENV=development node app.js",
+    "start:watch:dev": "cross-env NODE_ENV=development nodemon app.js",
+    "start:watch:prod": "cross-env NODE_ENV=production nodemon app.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "migrate": "sequelize-cli db:migrate",
     "migrate:undo": "sequelize-cli db:migrate:undo",
-    "migrate:reset": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate"
+    "migrate:reset": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate",
+    "seed:all": "npx sequelize-cli db:seed:all",
+    "seed:all:undo": "npx sequelize-cli db:seed:undo"
   },
   "repository": {
     "type": "git",
@@ -30,11 +34,15 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.9",
-    "sequelize": "^6.37.6",
+    "sequelize": "^6.37.7",
     "sequelize-cli": "^6.6.2",
     "sqlite3": "^5.1.7",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
   }
 }

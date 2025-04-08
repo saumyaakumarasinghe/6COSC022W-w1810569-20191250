@@ -1,49 +1,41 @@
 'use strict';
-const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class User extends Model {
-        static associate(models) {
-            // Define associations here
-        }
-    }
+  const User = sequelize.define('User', {
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    mobile: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastActivateAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    role: {
+      type: DataTypes.ENUM('ADMIN', 'USER'),
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+  });
 
-    User.init({
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    msg: 'Please enter your name'
-                }
-            }
-        },
-        email: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            unique: {
-                msg: 'Email address already in use'
-            },
-            validate: {
-                isEmail: {
-                    msg: 'Please enter a valid email address'
-                }
-            }
-        },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    msg: 'Please enter your password'
-                }
-            }
-        },
-    }, {
-        sequelize,
-        modelName: 'User',
-        tableName: 'Users'
-    });
-
-    return User;
+  return User;
 };
