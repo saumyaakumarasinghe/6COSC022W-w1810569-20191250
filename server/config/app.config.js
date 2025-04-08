@@ -1,9 +1,9 @@
 const express = require("express")
 const dotenv = require("dotenv");
-const swaggerDocs = require("../config/swagger.config");
+const swaggerDocs = require("./swagger.config");
 const routesV1 = require("../routes/v1");
 const bodyParser = require('body-parser');
-const { DB } = require('../config/database.config')
+const { DB } = require('./database.config')
 const cors = require('cors')
 
 // determine which env file to load
