@@ -51,7 +51,9 @@ async function getUserByEmail(email) {
 
 async function updateUser(userId, userData) {
   try {
-    return User.update(userData, { where: { id: userId } });
+    await User.update(userData, { where: { id: userId } });
+
+    return await getUserById(userId);
   } catch (error) {
     console.error('Error updating user:', error);
     throw error;
