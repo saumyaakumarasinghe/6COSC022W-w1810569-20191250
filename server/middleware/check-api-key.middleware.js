@@ -3,15 +3,23 @@ const {
   getApiKeyByKey,
   updateApiKeyUsageCount,
 } = require('../dao/api-key.dao');
+const { getUserById } = require('../dao/user.dao');
 
-function validateAPIKey(req, res, next) {
-  const apiKey = req.header['x-api-key'];
+const validateAPIKey = async (req, res, next) => {
+  const apiKey = req.headers['x-api-key'];
   if (!apiKey) {
     return res.status(403).json({ message: ERROR_MESSAGES.API_KEY_REQUIRED });
   }
 
-  const key = getApiKeyByKey(apiKey);
+  const key = await getApiKeyByKey(apiKey);
   if (!key) {
+    return res.status(500).json({ message: ERROR_MESSAGES.API_KEY_INVALID });
+  }
+
+  // Check if the API key is belongs to a valid user
+  const user = await getUserById(key.userId);
+  console.log(`API key: ${key.userId}, ${user.id}, ${user.status}`);
+  if (!user || user.status === false || user.id === key.userId) {
     return res.status(500).json({ message: ERROR_MESSAGES.API_KEY_INVALID });
   }
 
@@ -19,7 +27,7 @@ function validateAPIKey(req, res, next) {
   updateApiKeyUsageCount(apiKey);
 
   next();
-}
+};
 
 module.exports = {
   validateAPIKey,

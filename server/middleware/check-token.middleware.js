@@ -1,6 +1,6 @@
 const { authenticateToken } = require('../services/token.service');
 
-const checkAuth = (req, res, next) => {
+const checkAuth = async (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
   if (!token) {
