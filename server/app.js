@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const routesV1 = require('./routes/v1');
+const commonRoutes = require('./routes/common.routes');
 const bodyParser = require('body-parser');
 const db = require('./database/connection');
 
@@ -22,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // configure routes
 app.use('/api/v1', routesV1);
+app.use('/api', commonRoutes);
 
 // start the server
 app.listen(PORT, () => {
