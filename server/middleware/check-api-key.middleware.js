@@ -18,8 +18,14 @@ const validateAPIKey = async (req, res, next) => {
 
   // Check if the API key is belongs to a valid user
   const user = await getUserById(key.userId);
+
   console.log(`API key: ${key.userId}, ${user.id}, ${user.status}`);
-  if (!user || user.status === false || user.id === key.userId) {
+
+  if (
+    !user ||
+    user.status === false ||
+    Number(user.id) !== Number(key.userId)
+  ) {
     return res.status(500).json({ message: ERROR_MESSAGES.API_KEY_INVALID });
   }
 
