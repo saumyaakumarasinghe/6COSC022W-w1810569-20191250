@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 const routesV1 = require('./routes/v1');
 const bodyParser = require('body-parser');
 const db = require('./database/connection');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpecs = require('./docs/swagger.docs');
 
 // determine which env file to load
 const envFile =
@@ -16,9 +18,10 @@ const PORT = process.env.PORT;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// if (process.env.ENV !== "production") {
-//     swaggerDocs(app);
-// }
+// Swagger setup
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+}
 
 // configure routes
 app.use('/api/v1', routesV1);
@@ -26,4 +29,7 @@ app.use('/api/v1', routesV1);
 // start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
+  }
 });
