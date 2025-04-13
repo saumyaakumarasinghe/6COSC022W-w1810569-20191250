@@ -1,0 +1,86 @@
+paths:
+  /oauth/register:
+    post:
+      summary: Register a new user
+      description: Creates a new user account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: John
+                lastName:
+                  type: string
+                  example: Doe
+                email:
+                  type: string
+                  example: john.doe@example.com
+                mobile:
+                  type: string
+                  example: '+1234567890'
+                password:
+                  type: string
+                  example: 'password123'
+      responses:
+        200:
+          description: User registered successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: integer
+                    example: 1
+        403:
+          description: Invalid request body properties.
+        500:
+          description: Registration failed.
+
+  /oauth/login:
+    post:
+      summary: Login a user
+      description: Authenticates a user and returns a token and API key.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: john.doe@example.com
+                password:
+                  type: string
+                  example: 'password123'
+      responses:
+        200:
+          description: Login successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login successful
+                  userId:
+                    type: integer
+                    example: 1
+                  token:
+                    type: string
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+                  apiKey:
+                    type: string
+                    example: '12345-abcde-67890'
+        403:
+          description: Invalid request body properties.
+        404:
+          description: User not found.
+        500:
+          description: Login failed.
