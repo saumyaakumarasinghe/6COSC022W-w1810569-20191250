@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const swaggerDocs = require('./swagger.config');
 const routesV1 = require('../routes/v1');
+const commonRoutes = require('../routes/common.routes');
 const bodyParser = require('body-parser');
 const { DB } = require('./database.config');
 const cors = require('cors');
@@ -32,6 +33,7 @@ if (process.env.ENV !== 'production') {
 
 // configure routes
 app.use('/api/v1', routesV1);
+app.use('/api', commonRoutes);
 
 // start the server
 app.listen(PORT, () => {
