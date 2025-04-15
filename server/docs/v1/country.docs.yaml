@@ -1,0 +1,96 @@
+/api/v1/country:
+  get:
+    tags:
+      - Country
+    summary: Get all countries
+    description: Retrieves a list of all countries. Requires an API key and a JWT token for authorization.
+    security:
+      - ApiKeyAuth: []
+      - BearerAuth: []
+    responses:
+      200:
+        description: A list of countries.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Sri Lanka
+                  capital:
+                    type: string
+                    example: Sri Jayawardenepura Kotte
+                  currencies:
+                    type: array
+                    items:
+                      type: string
+                    example: ['LKR']
+                  languages:
+                    type: array
+                    items:
+                      type: string
+                    example: ['Sinhala', 'Tamil']
+                  flag:
+                    type: string
+                    example: 'https://flagcdn.com/lk.svg'
+      401:
+        description: Unauthorized. Missing or invalid API key or JWT token.
+      403:
+        description: Forbidden. The API key or JWT token does not have permission to access this resource.
+      500:
+        description: Internal server error. An error occurred while processing the request.
+
+/api/v1/country/{countryName}:
+  get:
+    tags:
+      - Country
+    summary: Get country by name
+    description: Retrieves details of a specific country by its name.
+    parameters:
+      - name: countryName
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      200:
+        description: Country details retrieved successfully.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Sri Lanka
+                  capital:
+                    type: string
+                    example: Sri Jayawardenepura Kotte
+                  currencies:
+                    type: array
+                    items:
+                      type: string
+                    example: ['LKR']
+                  languages:
+                    type: array
+                    items:
+                      type: string
+                    example: ['Sinhala', 'Tamil']
+                  flag:
+                    type: string
+                    example: 'https://flagcdn.com/lk.svg'
+      400:
+        description: Bad Request. The country name is invalid or not provided.
+      401:
+        description: Unauthorized. Missing or invalid API key or JWT token.
+      403:
+        description: Forbidden. The API key or JWT token does not have permission to access this resource.
+      404:
+        description: Not Found. The specified country was not found.
+      500:
+        description: Internal server error. An error occurred while processing the request.

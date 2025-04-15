@@ -1,8 +1,11 @@
 paths:
-  /oauth/register:
+  /api/v1/oauth/register:
     post:
+      tags:
+        - Authentication
       summary: Register a new user
       description: Creates a new user account.
+      security: [] # Disable global security for this endpoint
       requestBody:
         required: true
         content:
@@ -12,39 +15,33 @@ paths:
               properties:
                 firstName:
                   type: string
-                  example: John
+                  example: Saumya
                 lastName:
                   type: string
-                  example: Doe
+                  example: Kumarasinghe
                 email:
                   type: string
-                  example: john.doe@example.com
-                mobile:
-                  type: string
-                  example: '+1234567890'
+                  example: saumyakumarasinghe@gmail.com
                 password:
                   type: string
-                  example: 'password123'
+                  example: ABC456
       responses:
         200:
           description: User registered successfully.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  userId:
-                    type: integer
-                    example: 1
+        400:
+          description: Invalid request body properties. Required properties are missing or invalid.
         403:
-          description: Invalid request body properties.
+          description: User already exists. The email is already registered.
         500:
-          description: Registration failed.
+          description: Internal server error. The server encountered an unexpected condition.
 
-  /oauth/login:
+  /api/v1/oauth/login:
     post:
+      tags:
+        - Authentication
       summary: Login a user
-      description: Authenticates a user and returns a token and API key.
+      description: Authenticates a user and generates an API key and JWT token.
+      security: [] # Disable global security for this endpoint
       requestBody:
         required: true
         content:
@@ -54,33 +51,20 @@ paths:
               properties:
                 email:
                   type: string
-                  example: john.doe@example.com
+                  example: saumyakumarasinghe@gmail.com
                 password:
                   type: string
-                  example: 'password123'
+                  example: password123
       responses:
         200:
-          description: Login successful.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Login successful
-                  userId:
-                    type: integer
-                    example: 1
-                  token:
-                    type: string
-                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
-                  apiKey:
-                    type: string
-                    example: '12345-abcde-67890'
+          description: Login successful. Returns the user ID, JWT token, and API key.
+        400:
+          description: Invalid request body properties. Required properties are missing or invalid.
+        401:
+          description: Invalid credentials. The email or password provided is incorrect.
         403:
-          description: Invalid request body properties.
+          description: User not active. The user account is not active or has been deactivated.
         404:
-          description: User not found.
+          description: User not found. The email is not registered as a user.
         500:
-          description: Login failed.
+          description: Internal server error. The server encountered an unexpected condition.
