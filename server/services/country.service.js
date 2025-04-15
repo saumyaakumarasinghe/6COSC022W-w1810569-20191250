@@ -1,10 +1,13 @@
 const axios = require('axios');
+const { STATUS_CODES } = require('../constants/status-code.constants');
 
 async function getCountryByName(req, res) {
   try {
     const { countryName } = req.params;
     if (!countryName) {
-      return res.status(400).json('Country name is required');
+      return res
+        .status(STATUS_CODES.BAD_REQUEST)
+        .json('Country name is required');
     }
 
     const url = `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}?fullText=true`;
@@ -19,10 +22,12 @@ async function getCountryByName(req, res) {
       languages: country.languages ? Object.values(country.languages) : [],
       flag: country.flags?.svg || country.flags?.png || 'N/A',
     };
-    res.status(200).json(payload);
+    res.status(STATUS_CODES.OK).json(payload);
   } catch (err) {
     console.log(err.message);
-    return res.status(500).json('Country not found or API error');
+    return res
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .json('Country not found or API error');
   }
 }
 
@@ -39,10 +44,12 @@ async function getAllCountries(req, res) {
       flag: country.flags?.svg || country.flags?.png || 'N/A',
     }));
 
-    res.status(200).json(payload);
+    res.status(STATUS_CODES.OK).json(payload);
   } catch (err) {
     console.log(err.message);
-    return res.status(500).json('Failed to fetch countries');
+    return res
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .json('Failed to fetch countries');
   }
 }
 
