@@ -1,3 +1,4 @@
+const { STATUS_CODES } = require('../constants/status-code.constants');
 const { authenticateToken } = require('../services/token.service');
 
 const checkAuth = async (req, res, next) => {
@@ -11,7 +12,9 @@ const checkAuth = async (req, res, next) => {
 
   const decoded = authenticateToken(token);
   if (!decoded)
-    return res.status(401).json({ message: 'Invalid or expired token' });
+    return res
+      .status(STATUS_CODES.UNAUTHORIZED)
+      .json({ message: 'Invalid or expired token' });
 
   req.user = decoded;
   next(); // Pass control to the next handler

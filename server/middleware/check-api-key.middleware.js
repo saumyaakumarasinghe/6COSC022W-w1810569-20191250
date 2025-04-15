@@ -1,4 +1,5 @@
 const { ERROR_MESSAGES } = require('../constants/error.constants');
+const { STATUS_CODES } = require('../constants/status-code.constants');
 const {
   getApiKeyByKey,
   updateApiKeyUsageCount,
@@ -15,7 +16,9 @@ const validateAPIKey = async (req, res, next) => {
 
   const key = await getApiKeyByKey(apiKey);
   if (!key) {
-    return res.status(500).json({ message: ERROR_MESSAGES.API_KEY_INVALID });
+    return res
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .json({ message: ERROR_MESSAGES.API_KEY_INVALID });
   }
 
   // Check if the API key is belongs to a valid user

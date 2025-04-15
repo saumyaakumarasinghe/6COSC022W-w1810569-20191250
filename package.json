@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/saumyaakumarasinghe/6COSC022W-w1810569-20191250#readme",
   "dependencies": {
+    "6cosc022w-w1810569-20191250": "file:",
     "husky": "^9.1.7"
   },
   "devDependencies": {

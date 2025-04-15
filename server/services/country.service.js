@@ -29,7 +29,7 @@ async function getCountryByName(req, res) {
       languages: country.languages ? Object.values(country.languages) : [],
       flag: country.flags?.svg || country.flags?.png || 'N/A',
     };
-    res.status(200).json(payload);
+    res.status(STATUS_CODES.OK).json(payload);
   } catch (err) {
     console.log(err.message);
     return res
@@ -56,7 +56,7 @@ async function getAllCountries(req, res) {
       flag: country.flags?.svg || country.flags?.png || 'N/A',
     }));
 
-    res.status(200).json(payload);
+    res.status(STATUS_CODES.OK).json(payload);
   } catch (err) {
     console.log(err.message);
     return res

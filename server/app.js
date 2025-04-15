@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const routesV1 = require('./routes/v1');
+const commonRoutes = require('./routes/common.routes');
 const bodyParser = require('body-parser');
 const db = require('./database/connection');
 const swaggerUi = require('swagger-ui-express');
@@ -33,6 +34,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Configure routes
 app.use('/api/v1', routesV1);
+app.use('/api', commonRoutes);
 
 // Start the server
 app.listen(PORT, () => {
