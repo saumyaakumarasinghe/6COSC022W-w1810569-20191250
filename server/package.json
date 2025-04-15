@@ -6,7 +6,8 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development node app.js",
     "start:dev": "cross-env NODE_ENV=development nodemon app.js",
-    "start:prod": "cross-env NODE_ENV=production nodemon app.js",
+    "start:test": "cross-env NODE_ENV=test nodemon app.js",
+    "start:prod": "cross-env NODE_ENV=production node app.js",
     "format:fix": "prettier --write .",
     "format:check": "prettier --check .",
     "migrate": "sequelize-cli db:migrate",

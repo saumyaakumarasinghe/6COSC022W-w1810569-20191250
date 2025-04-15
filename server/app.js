@@ -6,15 +6,23 @@ const db = require('./database/connection');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./docs/swagger.docs');
 
-// determine which env file to load
-const envFile =
-  process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev';
+// Determine which env file to load
+const envFile = (() => {
+  switch (process.env.NODE_ENV) {
+    case 'production':
+      return '.env.prod';
+    case 'test':
+      return '.env.test';
+    default:
+      return '.env.dev';
+  }
+})();
 dotenv.config({ path: envFile });
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8000; // Default to port 8000 if PORT is not set
 
-// middleware to parse JSON and form data
+// Middleware to parse JSON and form data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -23,10 +31,10 @@ if (process.env.NODE_ENV !== 'production') {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 }
 
-// configure routes
+// Configure routes
 app.use('/api/v1', routesV1);
 
-// start the server
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   if (process.env.NODE_ENV !== 'production') {
