@@ -1,7 +1,7 @@
 const userDao = require('../dao/user.dao');
-const { ROLE } = require('../constants');
 const { hashPassword } = require('./password.service');
 const { STATUS_CODES } = require('../constants/status-code.constants');
+const { ERROR_MESSAGES } = require('../constants/error.constants');
 
 const createUser = async (req, res) => {
   try {
@@ -11,7 +11,7 @@ const createUser = async (req, res) => {
     if (!firstName || !lastName || !email || !mobile || !password || !role) {
       return res
         .status(STATUS_CODES.FORBIDDEN)
-        .json('Invalid request body properties!');
+        .json(ERROR_MESSAGES.INVALID_REQUEST_BODY);
     }
 
     // check email already exist
@@ -19,7 +19,7 @@ const createUser = async (req, res) => {
     if (existUser)
       return res
         .status(STATUS_CODES.UNPROCESSABLE_ENTITY)
-        .json('User already exists!');
+        .json(ERROR_MESSAGES.USER_ALREADY_EXISTS);
 
     password = await hashPassword(password);
 
@@ -32,6 +32,9 @@ const createUser = async (req, res) => {
       role
     );
 
+    // Remove password from user data
+    createdUser.password = undefined;
+
     res.status(STATUS_CODES.CREATED).json(createdUser);
   } catch (err) {
     console.log(err.message);
@@ -40,12 +43,19 @@ const createUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    //TODO play around with params
     const users = await userDao.getAllUsers();
+
+    // Remove password from user data
+    users.forEach((user) => {
+      user.password = undefined;
+    });
 
     res.status(STATUS_CODES.OK).json(users);
   } catch (err) {
     console.log(err.message);
+    res
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .json({ error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
   }
 };
 
@@ -56,9 +66,14 @@ const getSingleUser = async (req, res) => {
     // check if user exists
     const existUser = await userDao.getUserById(id);
     if (!existUser)
-      return res.status(STATUS_CODES.NOT_FOUND).json('User not found!');
+      return res
+        .status(STATUS_CODES.NOT_FOUND)
+        .json(ERROR_MESSAGES.USER_NOT_FOUND);
 
     const user = await userDao.getUserById(id);
+
+    // Remove password from user data
+    user.password = undefined;
 
     res.status(STATUS_CODES.OK).json(user);
   } catch (err) {
@@ -73,7 +88,9 @@ const updateUser = async (req, res) => {
     // check if user exists
     const existUserById = await userDao.getUserById(id);
     if (!existUserById)
-      return res.status(STATUS_CODES.NOT_FOUND).json('User not found!');
+      return res
+        .status(STATUS_CODES.NOT_FOUND)
+        .json(ERROR_MESSAGES.USER_NOT_FOUND);
 
     // check email already exist
     if (req.body.email) {
@@ -84,6 +101,9 @@ const updateUser = async (req, res) => {
     }
 
     const updatedUser = await userDao.updateUser(id, req.body);
+
+    // Remove password from user data
+    updatedUser.password = undefined;
 
     res.status(STATUS_CODES.OK).json(updatedUser);
   } catch (err) {
@@ -97,21 +117,29 @@ const updateStatusUser = async (req, res) => {
     const { status } = req.body;
 
     // validate request body
-    if (!status) {
+    if (status === undefined || status === null) {
       return res
         .status(STATUS_CODES.FORBIDDEN)
-        .json('Invalid request body properties!');
+        .json(ERROR_MESSAGES.INVALID_REQUEST_BODY);
     }
 
     // check if user exists
     const existUser = await userDao.getUserById(id);
     if (!existUser)
-      return res.status(STATUS_CODES.NOT_FOUND).json('User not found!');
+      return res
+        .status(STATUS_CODES.NOT_FOUND)
+        .json(ERROR_MESSAGES.USER_NOT_FOUND);
 
-    //TODO prevent self deactivation
-    // if (existUser.id == id) return res.status(STATUS_CODES.FORBIDDEN).json("Forbidden!")
+    // check if user is self deactivating
+    if (existUser.id == req.user.userId)
+      return res
+        .status(STATUS_CODES.FORBIDDEN)
+        .json(ERROR_MESSAGES.SELF_DEACTIVATION_NOT_ALLOWED);
 
-    const updatedUser = await userDao.updateUser(id, status);
+    const updatedUser = await userDao.updateUser(id, { status });
+
+    // Remove password from user data
+    updatedUser.password = undefined;
 
     res.status(STATUS_CODES.OK).json(updatedUser);
   } catch (err) {
@@ -119,7 +147,6 @@ const updateStatusUser = async (req, res) => {
   }
 };
 
-//TODO this can be done by admins only
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -127,15 +154,19 @@ const deleteUser = async (req, res) => {
     // check if user exists
     const existUser = await userDao.getUserById(id);
     if (!existUser)
-      return res.status(STATUS_CODES.NOT_FOUND).json('User not found!');
+      return res
+        .status(STATUS_CODES.NOT_FOUND)
+        .json(ERROR_MESSAGES.USER_NOT_FOUND);
 
-    if (existUser.role === ROLE.ADMIN) {
-      return res.status(STATUS_CODES.FORBIDDEN).json('Forbidden!');
-    }
+    // check if user is self deleting
+    if (existUser.id == req.user.userId)
+      return res
+        .status(STATUS_CODES.FORBIDDEN)
+        .json(ERROR_MESSAGES.SELF_DELETE_NOT_ALLOWED);
 
     const deletedUser = await userDao.deleteUser(id);
 
-    res.status(STATUS_CODES.OK).json(deletedUser);
+    res.status(STATUS_CODES.OK).json('User deleted successfully');
   } catch (err) {
     console.log(err.message);
   }

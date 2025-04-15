@@ -1,4 +1,4 @@
-import { Home, Inbox } from 'lucide-react';
+import { Home, Inbox } from "lucide-react";
 
 import {
   Sidebar,
@@ -9,18 +9,18 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
+} from "@/components/ui/sidebar";
 
 // Menu items.
 const items = [
   {
-    title: 'Home',
-    url: '#',
+    title: "Home",
+    url: "#",
     icon: Home,
   },
   {
-    title: 'Inbox',
-    url: '#',
+    title: "Inbox",
+    url: "#",
     icon: Inbox,
   },
 ];

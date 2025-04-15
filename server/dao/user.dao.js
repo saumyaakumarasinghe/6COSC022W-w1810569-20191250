@@ -51,9 +51,11 @@ async function getUserByEmail(email) {
 
 async function updateUser(userId, userData) {
   try {
+    console.log('userData', userData);
+
     await User.update(userData, { where: { id: userId } });
 
-    return await getUserById(userId);
+    return getUserById(userId);
   } catch (error) {
     console.error('Error updating user:', error);
     throw error;

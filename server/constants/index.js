@@ -3,9 +3,9 @@ const ENVIRONMENTS = {
   DEV: 'dev',
 };
 
-const ROLE = Object.freeze({
+const ROLE = {
   ADMIN: 'ADMIN',
   USER: 'USER',
-});
+};
 
 module.exports = { ROLE, ENVIRONMENTS };

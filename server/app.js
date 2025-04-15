@@ -1,13 +1,5 @@
-const express = require('express');
+// Dynamically load the correct .env file based on NODE_ENV
 const dotenv = require('dotenv');
-const routesV1 = require('./routes/v1');
-const commonRoutes = require('./routes/common.routes');
-const bodyParser = require('body-parser');
-const db = require('./database/connection');
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpecs = require('./docs/swagger.docs');
-
-// Determine which env file to load
 const envFile = (() => {
   switch (process.env.NODE_ENV) {
     case 'production':
@@ -18,7 +10,16 @@ const envFile = (() => {
       return '.env.dev';
   }
 })();
-dotenv.config({ path: envFile });
+dotenv.config({ path: envFile }); // Load the correct .env file
+console.log(`Loading environment variables from: ${envFile}`);
+
+const express = require('express');
+const routesV1 = require('./routes/v1');
+const commonRoutes = require('./routes/common.routes');
+const bodyParser = require('body-parser');
+const db = require('./database/connection');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpecs = require('./docs/swagger.docs');
 
 const app = express();
 const PORT = process.env.PORT || 8000; // Default to port 8000 if PORT is not set
