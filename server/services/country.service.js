@@ -1,17 +1,27 @@
-const axios = require('axios');
+const { STATUS_CODES } = require('../constants/status-code.constants');
+const { ERROR_MESSAGES } = require('../constants/error.constants');
+const {
+  getRestCountryByName,
+  getAllRestCountries,
+} = require('./rest-countries.service');
 
 async function getCountryByName(req, res) {
   try {
     const { countryName } = req.params;
     if (!countryName) {
-      return res.status(400).json('Country name is required');
+      return res
+        .status(STATUS_CODES.BAD_REQUEST)
+        .json(ERROR_MESSAGES.INVALID_REQUEST_PARAMS);
     }
 
-    const url = `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}?fullText=true`;
+    const country = await getRestCountryByName(countryName);
+    if (!country) {
+      return res
+        .status(STATUS_CODES.NOT_FOUND)
+        .json(ERROR_MESSAGES.COUNTRY_NOT_FOUND);
+    }
 
-    const response = await axios.get(url);
-    const country = response.data[0];
-
+    // Map the response to the desired format
     const payload = {
       name: country.name.common,
       capital: country.capital ? country.capital[0] : 'N/A',
@@ -22,16 +32,23 @@ async function getCountryByName(req, res) {
     res.status(200).json(payload);
   } catch (err) {
     console.log(err.message);
-    return res.status(500).json('Country not found or API error');
+    return res
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .json(ERROR_MESSAGES.FAILED_TO_FETCH_COUNTRIES);
   }
 }
 
 async function getAllCountries(req, res) {
   try {
-    const url = 'https://restcountries.com/v3.1/all';
-    const response = await axios.get(url);
+    const countries = await getAllRestCountries();
+    if (!countries || countries.length === 0) {
+      return res
+        .status(STATUS_CODES.NOT_FOUND)
+        .json(ERROR_MESSAGES.COUNTRY_NOT_FOUND);
+    }
 
-    const payload = response.data.map((country) => ({
+    // Map the response to the desired format
+    const payload = countries.map((country) => ({
       name: country.name?.common || 'N/A',
       capital: country.capital ? country.capital[0] : 'N/A',
       currencies: country.currencies ? Object.keys(country.currencies) : [],
@@ -42,7 +59,9 @@ async function getAllCountries(req, res) {
     res.status(200).json(payload);
   } catch (err) {
     console.log(err.message);
-    return res.status(500).json('Failed to fetch countries');
+    return res
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .json(ERROR_MESSAGES.FAILED_TO_FETCH_COUNTRIES);
   }
 }
 

@@ -5,7 +5,7 @@ const checkAuth = async (req, res, next) => {
 
   if (!token) {
     return res
-      .status(403)
+      .status(STATUS_CODES.UNAUTHORIZED)
       .json({ message: 'Access Denied, no token provided' });
   }
 

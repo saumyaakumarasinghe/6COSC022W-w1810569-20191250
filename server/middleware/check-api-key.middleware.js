@@ -8,7 +8,9 @@ const { getUserById } = require('../dao/user.dao');
 const validateAPIKey = async (req, res, next) => {
   const apiKey = req.headers['x-api-key'];
   if (!apiKey) {
-    return res.status(403).json({ message: ERROR_MESSAGES.API_KEY_REQUIRED });
+    return res
+      .status(STATUS_CODES.UNAUTHORIZED)
+      .json({ message: ERROR_MESSAGES.API_KEY_REQUIRED });
   }
 
   const key = await getApiKeyByKey(apiKey);
@@ -26,7 +28,9 @@ const validateAPIKey = async (req, res, next) => {
     user.status === false ||
     Number(user.id) !== Number(key.userId)
   ) {
-    return res.status(500).json({ message: ERROR_MESSAGES.API_KEY_INVALID });
+    return res
+      .status(STATUS_CODES.FORBIDDEN)
+      .json({ message: ERROR_MESSAGES.USER_NOT_AUTHORIZED });
   }
 
   // Update the usage count
