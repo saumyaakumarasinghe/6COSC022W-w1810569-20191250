@@ -1,14 +1,23 @@
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = 'w1810569-20191250'; //TODO secure this - use an environment variable for secret key in real projects
+
+const TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 
 const generateToken = async (payload) => {
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
-  return token;
+  try {
+    return jwt.sign(payload, TOKEN_SECRET, { expiresIn: '24h' });
+  } catch (err) {
+    console.error('Error generating access token:', err.message);
+    throw new Error('Failed to generate access token');
+  }
 };
 
 const authenticateToken = async (token) => {
-  const decoded = jwt.sign(token, SECRET_KEY);
-  return decoded;
+  try {
+    return jwt.verify(token, TOKEN_SECRET);
+  } catch (err) {
+    console.error('Access token verification failed:', err.message);
+    return null;
+  }
 };
 
 module.exports = {
