@@ -13,6 +13,8 @@ const ERROR_MESSAGES = {
   FAILED_TO_FETCH_COUNTRIES: 'Failed to fetch countries',
   COUNTRY_NOT_FOUND: 'Country not found',
   INTERNAL_SERVER_ERROR: 'Internal server error',
+  SELF_DELETE_NOT_ALLOWED: 'Self deletion is not allowed!',
+  SELF_DEACTIVATION_NOT_ALLOWED: 'Self deactivation is not allowed!',
 };
 
 module.exports = { ERROR_MESSAGES };
