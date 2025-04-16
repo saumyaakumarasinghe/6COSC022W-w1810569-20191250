@@ -10,16 +10,11 @@
     "start:prod": "cross-env NODE_ENV=production node app.js",
     "format:fix": "prettier --write .",
     "format:check": "prettier --check .",
-    "migrate": "sequelize-cli db:migrate",
+    "migrate": "NODE_ENV=test sequelize-cli db:migrate",
     "migrate:undo": "sequelize-cli db:migrate:undo",
     "migrate:reset": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate",
     "seed:all": "npx sequelize-cli db:seed:all",
-    "seed:all:undo": "npx sequelize-cli db:seed:undo",
-    "docker:build": "docker-compose build",
-    "docker:up": "docker-compose up",
-    "docker:down": "docker-compose down",
-    "docker:logs": "docker-compose logs -f",
-    "docker:exec": "docker exec -it server-side_app_1 bash"
+    "seed:all:undo": "npx sequelize-cli db:seed:undo"
   },
   "repository": {
     "type": "git",
