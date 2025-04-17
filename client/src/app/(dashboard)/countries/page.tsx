@@ -32,8 +32,8 @@ export default function CountriesPage() {
   const { logout } = useAuth();
 
   const handleError = useCallback(
-    (err: AxiosError<{ message: string }>) => {
-      if (err.response?.status === 401) {
+    (error: AxiosError<{ message?: string; error?: string }>) => {
+      if (error.response?.status === 401) {
         logout();
         return true;
       }
@@ -48,9 +48,9 @@ export default function CountriesPage() {
       setCountries(response.data);
       setError("");
     } catch (err) {
-      const error = err as AxiosError<{ message: string }>;
+      const error = err as AxiosError<{ message?: string; error?: string }>;
       if (!handleError(error)) {
-        setError(error.response?.data?.message || "Failed to fetch countries");
+        setError(error.message || "Failed to fetch countries");
       }
     } finally {
       setLoading(false);
@@ -67,11 +67,9 @@ export default function CountriesPage() {
       setSelectedCountry(response.data);
       setError("");
     } catch (err) {
-      const error = err as AxiosError<{ message: string }>;
+      const error = err as AxiosError<{ message?: string; error?: string }>;
       if (!handleError(error)) {
-        setError(
-          error.response?.data?.message || "Failed to fetch country details",
-        );
+        setError(error.message || "Failed to fetch country details");
       }
     }
   }

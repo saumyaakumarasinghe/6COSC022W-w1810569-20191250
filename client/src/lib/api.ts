@@ -25,6 +25,19 @@ api.interceptors.request.use(
   },
 );
 
+// Add a response interceptor to handle errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.data?.message) {
+      error.message = error.response.data.message;
+    } else if (error.response?.data?.error) {
+      error.message = error.response.data.error;
+    }
+    return Promise.reject(error);
+  },
+);
+
 export { api };
 
 interface LoginResponse {

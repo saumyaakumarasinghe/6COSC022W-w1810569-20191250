@@ -48,7 +48,7 @@ export default function Register() {
     setLoading(true);
 
     try {
-      await api.post("/oauth/register", data);
+      await api.post("oauth/register", data);
       // Registration successful, redirect to login
       router.push("/login");
     } catch (error) {

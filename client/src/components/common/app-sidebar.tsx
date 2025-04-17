@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/sidebar";
 
 export function AppSidebar() {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const pathname = usePathname();
 
   return (
@@ -37,14 +37,16 @@ export function AppSidebar() {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={pathname === "/users"}>
-                <Link href="/users">
-                  <Users className="w-4 h-4" />
-                  <span>Users</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+            {user?.role === "ADMIN" && (
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/users"}>
+                  <Link href="/users">
+                    <Users className="w-4 h-4" />
+                    <span>Users</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="border-t flex-shrink-0">

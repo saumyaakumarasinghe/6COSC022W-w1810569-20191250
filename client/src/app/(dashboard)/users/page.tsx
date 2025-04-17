@@ -59,12 +59,12 @@ export default function UsersPage() {
   const { logout } = useAuth();
 
   const handleError = useCallback(
-    (err: AxiosError<{ message: string }>) => {
-      if (err.response?.status === 401) {
+    (error: AxiosError<{ message?: string; error?: string }>) => {
+      if (error.response?.status === 401) {
         logout();
         return true;
       }
-      if (err.response?.status === 403) {
+      if (error.response?.status === 403) {
         router.push("/countries");
         return true;
       }
@@ -79,9 +79,9 @@ export default function UsersPage() {
       setUsers(response.data);
       setError("");
     } catch (err) {
-      const error = err as AxiosError<{ message: string }>;
+      const error = err as AxiosError<{ message?: string; error?: string }>;
       if (!handleError(error)) {
-        setError(error.response?.data?.message || "Failed to fetch users");
+        setError(error.message || "Failed to fetch users");
       }
     } finally {
       setLoading(false);
@@ -99,9 +99,9 @@ export default function UsersPage() {
       setIsCreateDialogOpen(false);
       setNewUserData({ role: "USER" });
     } catch (err) {
-      const error = err as AxiosError<{ message: string }>;
+      const error = err as AxiosError<{ message?: string; error?: string }>;
       if (!handleError(error)) {
-        setError(error.response?.data?.message || "Failed to create user");
+        setError(error.message || "Failed to create user");
       }
     }
   }
@@ -113,9 +113,9 @@ export default function UsersPage() {
       setIsEditing(false);
       setEditFormData({});
     } catch (err) {
-      const error = err as AxiosError<{ message: string }>;
+      const error = err as AxiosError<{ message?: string; error?: string }>;
       if (!handleError(error)) {
-        setError(error.response?.data?.message || "Failed to update user");
+        setError(error.message || "Failed to update user");
       }
     }
   }
@@ -125,11 +125,9 @@ export default function UsersPage() {
       await api.patch(`/user/${id}/status`, { status });
       fetchUsers();
     } catch (err) {
-      const error = err as AxiosError<{ message: string }>;
+      const error = err as AxiosError<{ message?: string; error?: string }>;
       if (!handleError(error)) {
-        setError(
-          error.response?.data?.message || "Failed to update user status",
-        );
+        setError(error.message || "Failed to update user status");
       }
     }
   }
@@ -139,9 +137,9 @@ export default function UsersPage() {
       await api.delete(`/user/${id}`);
       fetchUsers();
     } catch (err) {
-      const error = err as AxiosError<{ message: string }>;
+      const error = err as AxiosError<{ message?: string; error?: string }>;
       if (!handleError(error)) {
-        setError(error.response?.data?.message || "Failed to delete user");
+        setError(error.message || "Failed to delete user");
       }
     }
   }

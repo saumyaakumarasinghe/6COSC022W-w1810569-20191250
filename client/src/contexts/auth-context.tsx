@@ -10,6 +10,7 @@ import {
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { api } from "@/lib/api";
+import { AxiosError } from "axios";
 
 interface User {
   id: number;
@@ -76,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = useCallback(
     async (email: string, password: string) => {
       try {
-        const response = await api.post("/oauth/login", { email, password });
+        const response = await api.post("oauth/login", { email, password });
         const {
           token: newToken,
           user: userData,
@@ -96,7 +97,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         router.push("/countries");
       } catch (error) {
         console.error("Login failed:", error);
-        throw error;
+        if (error instanceof AxiosError) {
+          throw new Error(error.response?.data?.message || "Login failed");
+        }
+        throw new Error("Login failed");
       }
     },
     [router],
