@@ -11,6 +11,8 @@ const ERROR_MESSAGES = {
   USER_NOT_ACTIVE: 'User not active',
   REGISTRATION_FAILED: 'Registration failed',
   FAILED_TO_FETCH_COUNTRIES: 'Failed to fetch countries',
+  FAILED_TO_FETCH_API_KEY_INTERACTIONS: 'Failed to fetch api key interactions',
+  FAILED_TO_FETCH_API_KEY: 'Failed to fetch api key',
   COUNTRY_NOT_FOUND: 'Country not found',
   INTERNAL_SERVER_ERROR: 'Internal server error',
   SELF_DELETE_NOT_ALLOWED: 'Self deletion is not allowed!',
