@@ -17,31 +17,6 @@ async function createApiKey(key, userId, transaction) {
   }
 }
 
-async function getAllApiKeys() {
-  try {
-    console.log('Fetching all API keys');
-
-    return ApiKey.findAll({
-      include: [
-        {
-          model: User,
-          attributes: ['firstName', 'lastName', 'email', 'status'],
-          where: {
-            status: true,
-          },
-        },
-      ],
-      where: {
-        status: true,
-      },
-      order: [['createdAt', 'DESC']],
-    });
-  } catch (error) {
-    console.error('Error fetching api keys:', error);
-    throw error;
-  }
-}
-
 async function getApiKeysByUserId(userId) {
   try {
     return ApiKey.findAll({
@@ -127,7 +102,6 @@ async function deactivateUserApiKeys(userId, transaction) {
 
 module.exports = {
   createApiKey,
-  getAllApiKeys,
   getApiKeyByKey,
   getApiKeyById,
   getApiKeysByUserId,

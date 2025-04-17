@@ -1,37 +1,8 @@
 const apiKeyDao = require('../dao/api-key.dao');
-const apiKeyInteractionDao = require('../dao/api-key-interaction.dao');
 const { generateApiKey } = require('./crypto.service');
 const { STATUS_CODES } = require('../constants/status-code.constants');
 const { ERROR_MESSAGES } = require('../constants/error.constants');
 const { sequelize } = require('../models/index');
-
-const getApiKeysList = async (req, res) => {
-  try {
-    const apiKeys = await apiKeyDao.getAllApiKeys();
-
-    res.status(STATUS_CODES.OK).json(apiKeys);
-  } catch (err) {
-    console.error(err);
-    return res
-      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
-      .json(ERROR_MESSAGES.FAILED_TO_FETCH_API_KEY);
-  }
-};
-
-async function createApiKey(key, userId, transaction) {
-  try {
-    return ApiKey.create(
-      {
-        key,
-        userId,
-      },
-      { transaction }
-    );
-  } catch (error) {
-    console.error('Error creating api key:', error);
-    throw error;
-  }
-}
 
 const getUserApiKeys = async (req, res) => {
   try {
@@ -52,6 +23,7 @@ const createNewApiKey = async (req, res) => {
   const transaction = await sequelize.transaction();
   try {
     const userId = req.user.userId;
+
     const apiKey = await generateApiKey();
 
     // Then create the new API key
@@ -75,6 +47,7 @@ const revokeApiKey = async (req, res) => {
     const { id } = req.params;
 
     await apiKeyDao.deleteApiKey(id);
+
     res
       .status(STATUS_CODES.OK)
       .json({ message: 'API key deleted successfully' });
@@ -86,23 +59,8 @@ const revokeApiKey = async (req, res) => {
   }
 };
 
-const getApiKeyStats = async (req, res) => {
-  try {
-    const stats = await apiKeyInteractionDao.getApiKeyStats();
-    res.status(STATUS_CODES.OK).json(stats);
-  } catch (err) {
-    console.error(err);
-    return res
-      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
-      .json(ERROR_MESSAGES.FAILED_TO_FETCH_API_KEY_STATS);
-  }
-};
-
 module.exports = {
-  getApiKeysList,
-  createApiKey,
   getUserApiKeys,
   createNewApiKey,
   revokeApiKey,
-  getApiKeyStats,
 };
