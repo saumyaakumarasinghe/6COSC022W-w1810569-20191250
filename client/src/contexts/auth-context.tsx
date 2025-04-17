@@ -21,6 +21,7 @@ interface User {
   status: boolean;
   lastActivateAt: string;
 }
+
 interface AuthContextType {
   isAuthenticated: boolean;
   isLoggedIn: boolean;
@@ -37,25 +38,40 @@ const PUBLIC_ROUTES = ["/", "/login", "/register"];
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
+  // Initialize auth state from localStorage
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
     const storedApiKey = localStorage.getItem("apiKey");
 
-    if (storedToken && storedUser && !PUBLIC_ROUTES.includes(pathname)) {
+    if (storedToken && storedUser) {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
       api.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
       if (storedApiKey) {
         api.defaults.headers.common["x-api-key"] = storedApiKey;
       }
-    } else if (!PUBLIC_ROUTES.includes(pathname) && !storedToken) {
-      router.push("/login");
     }
-  }, [pathname, router]);
+    setIsInitialized(true);
+  }, []);
+
+  // Handle routing based on auth state
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
+    const isAuthenticated = !!token;
+
+    if (!isAuthenticated && !isPublicRoute) {
+      router.push("/login");
+    } else if (isAuthenticated && isPublicRoute && pathname !== "/") {
+      router.push("/countries");
+    }
+  }, [isInitialized, token, pathname, router]);
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -108,6 +124,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }),
     [token, user, login, logout],
   );
+
+  if (!isInitialized) {
+    return null; // or a loading spinner
+  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
