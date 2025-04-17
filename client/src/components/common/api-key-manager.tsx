@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { AxiosError } from "axios";
 import { CopyIcon, PlusIcon, Trash2 } from "lucide-react";
 import api from "@/lib/api";
@@ -23,6 +23,11 @@ interface ApiKey {
   status: boolean;
   createdAt: string;
   updatedAt: string;
+  User?: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
 }
 
 interface ApiKeyManagerProps {
@@ -40,7 +45,16 @@ export function ApiKeyManager({
 }: ApiKeyManagerProps) {
   const [loading, setLoading] = useState(false);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [currentApiKey, setCurrentApiKey] = useState<string | null>(null);
   const handleError = useErrorHandler();
+
+  // Get the current API key from localStorage when the component mounts
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedApiKey = localStorage.getItem("apiKey");
+      setCurrentApiKey(storedApiKey);
+    }
+  }, []);
 
   const generateKey = useCallback(async () => {
     try {
@@ -72,7 +86,7 @@ export function ApiKeyManager({
         setLoading(false);
       }
     },
-    [handleError, onKeyDeleted, onError],
+    [handleError, onKeyDeleted, onError]
   );
 
   const copyToClipboard = useCallback((key: string) => {
@@ -80,6 +94,14 @@ export function ApiKeyManager({
     setSelectedKey(key);
     setTimeout(() => setSelectedKey(null), 2000);
   }, []);
+
+  // Function to check if an API key is the current one in use
+  const isCurrentKey = useCallback(
+    (key: string) => {
+      return key === currentApiKey;
+    },
+    [currentApiKey]
+  );
 
   if (!apiKeys?.length) {
     return (
@@ -115,6 +137,7 @@ export function ApiKeyManager({
           <TableHeader>
             <TableRow>
               <TableHead>API Key</TableHead>
+              <TableHead>User</TableHead>
               <TableHead>Created At</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Actions</TableHead>
@@ -122,9 +145,29 @@ export function ApiKeyManager({
           </TableHeader>
           <TableBody>
             {apiKeys.map((apiKey) => (
-              <TableRow key={apiKey.id}>
+              <TableRow
+                key={apiKey.id}
+                className={isCurrentKey(apiKey.key) ? "bg-blue-50" : ""}
+              >
                 <TableCell className="font-mono text-sm">
                   {apiKey.key.substring(0, 32)}...
+                  {isCurrentKey(apiKey.key) && (
+                    <span className="ml-2 text-xs text-blue-600 font-medium">
+                      (Current)
+                    </span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {apiKey.User ? (
+                    <div>
+                      <div className="font-medium">{`${apiKey.User.firstName} ${apiKey.User.lastName}`}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {apiKey.User.email}
+                      </div>
+                    </div>
+                  ) : (
+                    <span className="text-muted-foreground">Unknown user</span>
+                  )}
                 </TableCell>
                 <TableCell>
                   {new Date(apiKey.createdAt).toLocaleDateString()}
@@ -154,7 +197,12 @@ export function ApiKeyManager({
                       variant="destructive"
                       size="sm"
                       onClick={() => deleteKey(apiKey.id)}
-                      disabled={loading}
+                      disabled={loading || isCurrentKey(apiKey.key)}
+                      title={
+                        isCurrentKey(apiKey.key)
+                          ? "Cannot delete the API key currently in use"
+                          : "Delete API key"
+                      }
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>

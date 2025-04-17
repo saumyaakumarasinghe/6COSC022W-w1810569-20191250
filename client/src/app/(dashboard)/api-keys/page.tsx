@@ -14,6 +14,11 @@ interface ApiKey {
   status: boolean;
   createdAt: string;
   updatedAt: string;
+  User?: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
 }
 
 export default function ApiKeysPage() {
@@ -24,7 +29,7 @@ export default function ApiKeysPage() {
 
   const fetchApiKeys = useCallback(async () => {
     try {
-      const response = await api.get("/api-key");
+      const response = await api.get("/api-key/");
       setApiKeys(response.data);
       setError("");
     } catch (err) {

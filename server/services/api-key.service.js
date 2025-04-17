@@ -3,7 +3,6 @@ const apiKeyInteractionDao = require('../dao/api-key-interaction.dao');
 const { generateApiKey } = require('./crypto.service');
 const { STATUS_CODES } = require('../constants/status-code.constants');
 const { ERROR_MESSAGES } = require('../constants/error.constants');
-const { User } = require('../models/index');
 const { sequelize } = require('../models/index');
 
 const getApiKeysList = async (req, res) => {
@@ -36,8 +35,10 @@ async function createApiKey(key, userId, transaction) {
 
 const getUserApiKeys = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user.userId;
+
     const apiKeys = await apiKeyDao.getApiKeysByUserId(userId);
+
     res.status(STATUS_CODES.OK).json(apiKeys);
   } catch (err) {
     console.error(err);
@@ -48,23 +49,20 @@ const getUserApiKeys = async (req, res) => {
 };
 
 const createNewApiKey = async (req, res) => {
-  const transaction = await sequelize.transaction(); // Await here
+  const transaction = await sequelize.transaction();
   try {
     const userId = req.user.userId;
     const apiKey = await generateApiKey();
 
-    // Deactivate existing API keys
-    await apiKeyDao.deactivateUserApiKeys(userId, transaction); // Ensure transaction is passed
-
     // Then create the new API key
-    await apiKeyDao.createApiKey(apiKey, userId, transaction); // Ensure transaction is passed
+    await apiKeyDao.createApiKey(apiKey, userId, transaction);
 
-    await transaction.commit(); // Commit the transaction
+    await transaction.commit();
     res
       .status(STATUS_CODES.CREATED)
       .json({ message: 'Api Key created successfully!' });
   } catch (err) {
-    await transaction.rollback(); // Await rollback
+    await transaction.rollback();
     console.error(err);
     return res
       .status(STATUS_CODES.INTERNAL_SERVER_ERROR)

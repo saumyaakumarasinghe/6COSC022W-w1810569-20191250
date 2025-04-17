@@ -22,8 +22,10 @@ apiKeyRoutes.get(
 );
 
 // User routes
-apiKeyRoutes.get('/me', apiKeyService.getUserApiKeys);
+apiKeyRoutes.get('/', apiKeyService.getUserApiKeys);
+
 apiKeyRoutes.post('/', apiKeyService.createNewApiKey);
+
 apiKeyRoutes.delete('/:id', apiKeyService.revokeApiKey);
 
 module.exports = apiKeyRoutes;
