@@ -8,7 +8,7 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     await queryInterface.addColumn('ApiKeys', 'usageCount', {
       type: Sequelize.INTEGER,
-      allowNull: false
+      allowNull: false,
     });
-  }
+  },
 };
