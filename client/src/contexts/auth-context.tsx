@@ -12,9 +12,14 @@ import { useRouter, usePathname } from "next/navigation";
 import { api } from "@/lib/api";
 
 interface User {
-  id: string;
-  name: string;
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  mobile: string;
   role: "ADMIN" | "USER";
+  status: boolean;
+  lastActivateAt: string;
 }
 interface AuthContextType {
   isAuthenticated: boolean;
