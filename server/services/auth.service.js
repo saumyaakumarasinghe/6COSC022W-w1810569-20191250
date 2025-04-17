@@ -57,9 +57,16 @@ const login = async (req, res) => {
 
     const payload = {
       message: 'Login successful',
-      userId: tokenPayload.userId,
       token,
       apiKey,
+      user: {
+        id: existUser.id,
+        firstName: existUser.firstName,
+        lastName: existUser.lastName,
+        email: existUser.email,
+        role: existUser.role,
+        status: existUser.status,
+      },
     };
     await transaction.commit();
     res.status(STATUS_CODES.OK).json(payload);

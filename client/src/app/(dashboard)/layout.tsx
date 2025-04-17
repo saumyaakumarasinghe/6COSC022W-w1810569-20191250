@@ -1,14 +1,35 @@
-import { AppSidebar } from "@/components/ui/common/app-sidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+"use client";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/auth-context";
+import { AppSidebar } from "@/components/ui/common/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { isLoggedIn, user } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push("/login");
+    }
+  }, [isLoggedIn, router]);
+
+  if (!isLoggedIn || !user) {
+    return null;
+  }
+
   return (
     <SidebarProvider>
-      <AppSidebar />
-      <main>
-        <SidebarTrigger />
-        {children}
-      </main>
+      <div className="flex h-screen">
+        <AppSidebar />
+        <main className="flex-1 overflow-auto">{children}</main>
+      </div>
     </SidebarProvider>
   );
 }

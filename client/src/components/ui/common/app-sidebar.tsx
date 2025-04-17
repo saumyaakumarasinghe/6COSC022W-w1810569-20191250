@@ -1,5 +1,6 @@
-import { Home, Inbox } from "lucide-react";
+"use client";
 
+import { SettingsIcon, GlobeIcon, UsersIcon } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -7,30 +8,36 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuButton,
 } from "@/components/ui/sidebar";
-
-// Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-];
+import { useAuth } from "@/contexts/auth-context";
 
 export function AppSidebar() {
+  const { user } = useAuth();
+
+  const items = [
+    {
+      title: "Countries",
+      url: "/countries",
+      icon: GlobeIcon,
+    },
+    ...(user?.role === "ADMIN"
+      ? [
+          {
+            title: "Users",
+            url: "/users",
+            icon: UsersIcon,
+          },
+        ]
+      : []),
+  ];
+
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>User Management</SidebarGroupLabel>
+          <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
