@@ -1,0 +1,181 @@
+openapi: 3.0.0
+paths:
+  /api/v1/api-key:
+    post:
+      tags:
+        - API Keys
+      summary: Generate a new API key
+      security:
+        - bearerAuth: []
+      responses:
+        201:
+          description: API key generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: API key generated successfully
+                  apiKey:
+                    type: string
+                    example: 1234567890abcdef1234567890abcdef
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+        - API Keys
+      summary: Get all API keys (Admin only)
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: List of all API keys with user details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiKeyWithUser'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/api-key/me:
+    get:
+      tags:
+        - API Keys
+      summary: Get current user's API keys
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: List of user's API keys
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiKey'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/api-key/{keyId}:
+    delete:
+      tags:
+        - API Keys
+      summary: Revoke an API key
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: keyId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the API key to revoke
+      responses:
+        200:
+          description: API key revoked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: API key revoked successfully
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: API key not found or unauthorized
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/v1/api-key/stats:
+    get:
+      tags:
+        - API Keys
+      summary: Get API key usage statistics (Admin only)
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: API key usage statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  overall:
+                    type: object
+                    properties:
+                      totalKeys:
+                        type: integer
+                        example: 100
+                      totalUsage:
+                        type: integer
+                        example: 5000
+                      averageUsage:
+                        type: number
+                        example: 50
+                  userStats:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        userId:
+                          type: integer
+                        keyCount:
+                          type: integer
+                        totalUsage:
+                          type: integer
+                        User:
+                          $ref: '#/components/schemas/UserBasic'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    ApiKey:
+      type: object
+      properties:
+        id:
+          type: integer
+        key:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    ApiKeyWithUser:
+      allOf:
+        - $ref: '#/components/schemas/ApiKey'
+        - type: object
+          properties:
+            User:
+              $ref: '#/components/schemas/UserBasic'
+
+    UserBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string

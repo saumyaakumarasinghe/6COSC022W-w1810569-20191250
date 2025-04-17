@@ -24,7 +24,6 @@ interface User {
 }
 
 interface AuthContextType {
-  isAuthenticated: boolean;
   isLoggedIn: boolean;
   user: User | null;
   token: string | null;
@@ -65,11 +64,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!isInitialized) return;
 
     const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
-    const isAuthenticated = !!token;
+    const isLoggedIn = !!token;
 
-    if (!isAuthenticated && !isPublicRoute) {
+    if (!isLoggedIn && !isPublicRoute) {
       router.push("/login");
-    } else if (isAuthenticated && isPublicRoute && pathname !== "/") {
+    } else if (isLoggedIn && isPublicRoute && pathname !== "/") {
       router.push("/countries");
     }
   }, [isInitialized, token, pathname, router]);
@@ -84,19 +83,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           apiKey: userApiKey,
         } = response.data;
 
+        // Update state and storage in a single batch
         setToken(newToken);
         setUser(userData);
-
         localStorage.setItem("token", newToken);
         localStorage.setItem("user", JSON.stringify(userData));
         localStorage.setItem("apiKey", userApiKey);
 
+        // Update API headers
         api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
         api.defaults.headers.common["x-api-key"] = userApiKey;
 
         router.push("/countries");
       } catch (error) {
-        console.error("Login failed:", error);
         if (error instanceof AxiosError) {
           throw new Error(error.response?.data?.message || "Login failed");
         }
@@ -107,19 +106,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const logout = useCallback(() => {
+    // Clear state and storage in a single batch
     setUser(null);
     setToken(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("apiKey");
+
+    // Clean up API headers
     delete api.defaults.headers.common["Authorization"];
     delete api.defaults.headers.common["x-api-key"];
+
     router.push("/login");
   }, [router]);
 
   const value = useMemo(
     () => ({
-      isAuthenticated: !!token,
       isLoggedIn: !!token,
       user,
       token,
@@ -130,7 +132,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   if (!isInitialized) {
-    return null; // or a loading spinner
+    return null;
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

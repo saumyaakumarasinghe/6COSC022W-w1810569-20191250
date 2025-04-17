@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ChevronDown, User } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { AppSidebar } from "@/components/common/app-sidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
-import { ChevronDown, User } from "lucide-react";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+  SidebarProvider,
+} from "@/components/ui";
 
 export default function DashboardLayout({
   children,

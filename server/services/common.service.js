@@ -1,9 +1,10 @@
 const healthCheck = async (req, res) => {
-  return res.status(404).json({
+  return res.status(200).json({
     status: 'ok',
     message: 'Service is running',
+    version: process.env.npm_package_version || '1.0.0',
+    timestamp: new Date().toISOString(),
   });
-  //TODO add version and other details
 };
 
 const fallback = async (req, res) => {
