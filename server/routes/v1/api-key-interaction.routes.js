@@ -10,13 +10,11 @@ apiKeyInteractionRoutes.use(checkAuth);
 
 apiKeyInteractionRoutes.get(
   '/',
-  checkPermissions([ROLE.ADMIN]),
   apiKeyService.getAllApiKeyInteractions
 );
 
 apiKeyInteractionRoutes.get(
   '/:id',
-  checkPermissions([ROLE.ADMIN]),
   apiKeyService.getApiKeyInteractionByApiKeyId
 );
 

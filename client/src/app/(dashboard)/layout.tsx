@@ -88,24 +88,10 @@ export default function DashboardLayout({
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-sm font-medium text-muted-foreground">
-                  Mobile
-                </span>
-                <span className="text-base">{user.mobile}</span>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-sm font-medium text-muted-foreground">
                   Role
                 </span>
                 <span className="text-base capitalize">
                   {user.role.toLowerCase()}
-                </span>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-sm font-medium text-muted-foreground">
-                  Status
-                </span>
-                <span className="text-base">
-                  {user.status ? "Active" : "Inactive"}
                 </span>
               </div>
             </div>
