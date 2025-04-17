@@ -14,6 +14,7 @@ dotenv.config({ path: envFile }); // Load the correct .env file
 console.log(`Loading environment variables from: ${envFile}`);
 
 const express = require('express');
+const cors = require('cors');
 const routesV1 = require('./routes/v1');
 const commonRoutes = require('./routes/common.routes');
 const bodyParser = require('body-parser');
@@ -23,6 +24,17 @@ const swaggerSpecs = require('./docs/swagger.docs');
 
 const app = express();
 const PORT = process.env.PORT || 8000; // Default to port 8000 if PORT is not set
+
+// Enable CORS for development
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? 'your-production-domain'
+        : ['http://localhost:3000', 'http://localhost:3001'],
+    credentials: true,
+  })
+);
 
 // Middleware to parse JSON and form data
 app.use(bodyParser.json());

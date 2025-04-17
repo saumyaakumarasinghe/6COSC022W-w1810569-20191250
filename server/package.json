@@ -19,7 +19,6 @@
     "seed:all:undo": "npx sequelize-cli db:seed:undo",
     "seed:all:dev": "NODE_ENV=development npx sequelize-cli db:seed:all",
     "seed:all:test": "NODE_ENV=test npx sequelize-cli db:seed:all",
-    "seed:all:undo": "npx sequelize-cli db:seed:undo",
     "docker:build": "docker-compose build",
     "docker:up": "docker-compose up",
     "docker:down": "docker-compose down",
