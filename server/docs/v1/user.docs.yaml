@@ -1,0 +1,359 @@
+paths:
+  /api/v1/user:
+    post:
+      tags:
+        - User
+      summary: Create a new user
+      description: Adds a new user to the system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: Saumya
+                lastName:
+                  type: string
+                  example: Kumarasinghe
+                email:
+                  type: string
+                  example: saumyakumarasinghe@gmail.com
+                mobile:
+                  type: string
+                  example: '+1234567890'
+                password:
+                  type: string
+                  example: 'password123'
+                role:
+                  type: string
+                  example: USER
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    firstName:
+                      type: string
+                      example: Saumya
+                    lastName:
+                      type: string
+                      example: Kumarasinghe
+                    email:
+                      type: string
+                      example: saumyakumarasinghe@gmail.com
+                    mobile:
+                      type: string
+                      example: '+1234567890'
+                    lastActivateAt:
+                      type: datetime
+                      example: '2023-10-01T12:00:00Z'
+                    role:
+                      type: string
+                      example: 'USER'
+                    status:
+                      type: boolean
+                      example: true
+                    created:
+                      type: datetime
+                      example: '2023-10-01T12:00:00Z'
+                    updatedAt:
+                      type: datetime
+                      example: '2023-10-01T12:00:00Z'
+        401:
+          description: Unauthorized. Missing or invalid API key or JWT token.
+        403:
+          description: Invalid request body properties.
+        422:
+          description: User already exists. The email is already registered.
+        500:
+          description: Internal server error. An error occurred while processing the request.
+
+    get:
+      tags:
+        - User
+      summary: Get all users
+      description: Retrieves a list of all users.
+      responses:
+        200:
+          description: A list of users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    firstName:
+                      type: string
+                      example: Saumya
+                    lastName:
+                      type: string
+                      example: Kumarasinghe
+                    email:
+                      type: string
+                      example: saumyakumarasinghe@gmail.com
+                    mobile:
+                      type: string
+                      example: '+1234567890'
+                    lastActivateAt:
+                      type: datetime
+                      example: '2023-10-01T12:00:00Z'
+                    role:
+                      type: string
+                      example: 'USER'
+                    status:
+                      type: boolean
+                      example: true
+                    created:
+                      type: datetime
+                      example: '2023-10-01T12:00:00Z'
+                    updatedAt:
+                      type: datetime
+                      example: '2023-10-01T12:00:00Z'
+        401:
+          description: Unauthorized. Missing or invalid API key or JWT token.
+        403:
+          description: Invalid request body properties.
+        500:
+          description: Internal server error. An error occurred while processing the request.
+
+  /api/v1/user/{id}:
+    get:
+      tags:
+        - User
+      summary: Get a single user
+      description: Retrieves a user by their ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: User retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  firstName:
+                    type: string
+                    example: Saumya
+                  lastName:
+                    type: string
+                    example: Kumarasinghe
+                  email:
+                    type: string
+                    example: saumyakumarasinghe@gmail.com
+                  mobile:
+                    type: string
+                    example: '+1234567890'
+                  lastActivateAt:
+                    type: datetime
+                    example: '2023-10-01T12:00:00Z'
+                  role:
+                    type: string
+                    example: 'USER'
+                  status:
+                    type: boolean
+                    example: true
+                  created:
+                    type: datetime
+                    example: '2023-10-01T12:00:00Z'
+                  updatedAt:
+                    type: datetime
+                    example: '2023-10-01T12:00:00Z'
+        404:
+          description: User not found.
+        401:
+          description: Unauthorized. Missing or invalid API key or JWT token.
+        403:
+          description: Invalid request body properties.
+        500:
+          description: Internal server error. An error occurred while processing the request.
+
+    put:
+      tags:
+        - User
+      summary: Update a user
+      description: Updates a user's details.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: Saumya
+                lastName:
+                  type: string
+                  example: Kumarasinghe
+                email:
+                  type: string
+                  example: saumyakumarasinghe@gmail.com
+                mobile:
+                  type: string
+                  example: '+1234567890'
+      responses:
+        200:
+          description: User updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  firstName:
+                    type: string
+                    example: Saumya
+                  lastName:
+                    type: string
+                    example: Kumarasinghe
+                  email:
+                    type: string
+                    example: saumyakumarasinghe@gmail.com
+                  mobile:
+                    type: string
+                    example: '+1234567890'
+                  lastActivateAt:
+                    type: datetime
+                    example: '2023-10-01T12:00:00Z'
+                  role:
+                    type: string
+                    example: 'USER'
+                  status:
+                    type: boolean
+                    example: true
+                  created:
+                    type: datetime
+                    example: '2023-10-01T12:00:00Z'
+                  updatedAt:
+                    type: datetime
+                    example: '2023-10-01T12:00:00Z'
+        404:
+          description: User not found.
+        401:
+          description: Unauthorized. Missing or invalid API key or JWT token.
+        403:
+          description: Invalid request body properties.
+        500:
+          description: Internal server error. An error occurred while processing the request.
+
+    delete:
+      tags:
+        - User
+      summary: Delete a user
+      description: Deletes a user by their ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: User deleted successfully.
+        401:
+          description: Unauthorized. Missing or invalid API key or JWT token.
+        403:
+          description: Self deletion is not allowed.
+        404:
+          description: User not found.
+        500:
+          description: Internal server error. An error occurred while processing the request.
+
+/api/v1/user/{id}/status:
+  patch:
+    tags:
+      - User
+    summary: Activate/Deactivate a user
+    description: Activates or deactivates a user by their ID.
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+                example: true
+    responses:
+      200:
+        description: User status updated successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                firstName:
+                  type: string
+                  example: Saumya
+                lastName:
+                  type: string
+                  example: Kumarasinghe
+                email:
+                  type: string
+                  example: saumyakumarasinghe@gmail.com
+                mobile:
+                  type: string
+                  example: '+1234567890'
+                lastActivateAt:
+                  type: datetime
+                  example: '2023-10-01T12:00:00Z'
+                role:
+                  type: string
+                  example: 'USER'
+                status:
+                  type: boolean
+                  example: true
+                created:
+                  type: datetime
+                  example: '2023-10-01T12:00:00Z'
+                updatedAt:
+                  type: datetime
+                  example: '2023-10-01T12:00:00Z'
+      404:
+        description: User not found.
+      401:
+        description: Unauthorized. Missing or invalid API key or JWT token.
+      403:
+        description: Invalid request body properties or self Activate/Deactivate not permitted.
+      500:
+        description: Internal server error. An error occurred while processing the request.

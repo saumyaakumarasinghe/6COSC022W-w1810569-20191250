@@ -1,0 +1,60 @@
+{
+  "name": "server-side",
+  "version": "1.0.0",
+  "description": "6COSC022W Coursework 1 (2024/25) Server-Side",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development node app.js",
+    "start:dev": "cross-env NODE_ENV=development nodemon app.js",
+    "start:test": "cross-env NODE_ENV=test nodemon app.js",
+    "start:prod": "cross-env NODE_ENV=production node app.js",
+    "format:fix": "prettier --write .",
+    "format:check": "prettier --check .",
+    "migrate": "NODE_ENV=test sequelize-cli db:migrate",
+    "migrate:dev": "NODE_ENV=development sequelize-cli db:migrate",
+    "migrate:test": "NODE_ENV=test sequelize-cli db:migrate",
+    "migrate:undo": "sequelize-cli db:migrate:undo",
+    "migrate:reset": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate",
+    "seed:all": "npx sequelize-cli db:seed:all",
+    "seed:all:undo": "npx sequelize-cli db:seed:undo",
+    "seed:all:dev": "NODE_ENV=development npx sequelize-cli db:seed:all",
+    "seed:all:test": "NODE_ENV=test npx sequelize-cli db:seed:all",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:exec": "docker exec -it server-side_app_1 bash"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saumyaakumarasinghe/6COSC022W-w1810569-20191250.git"
+  },
+  "keywords": [],
+  "author": "Saumya Kumarasinghe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saumyaakumarasinghe/6COSC022W-w1810569-20191250/issues"
+  },
+  "homepage": "https://github.com/saumyaakumarasinghe/6COSC022W-w1810569-20191250#readme",
+  "dependencies": {
+    "6cosc022w-w1810569-20191250": "file:",
+    "axios": "^1.8.4",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "nodemon": "^3.1.9",
+    "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.2",
+    "server-side": "file:",
+    "sqlite3": "^5.1.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  }
+}

@@ -1,0 +1,70 @@
+paths:
+  /api/v1/oauth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      description: Creates a new user account.
+      security: [] # Disable global security for this endpoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: Saumya
+                lastName:
+                  type: string
+                  example: Kumarasinghe
+                email:
+                  type: string
+                  example: saumyakumarasinghe@gmail.com
+                password:
+                  type: string
+                  example: ABC456
+      responses:
+        200:
+          description: User registered successfully.
+        400:
+          description: Invalid request body properties. Required properties are missing or invalid.
+        403:
+          description: User already exists. The email is already registered.
+        500:
+          description: Internal server error. The server encountered an unexpected condition.
+
+  /api/v1/oauth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login a user
+      description: Authenticates a user and generates an API key and JWT token.
+      security: [] # Disable global security for this endpoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: saumyakumarasinghe@gmail.com
+                password:
+                  type: string
+                  example: password123
+      responses:
+        200:
+          description: Login successful. Returns the user ID, JWT token, and API key.
+        400:
+          description: Invalid request body properties. Required properties are missing or invalid.
+        401:
+          description: Invalid credentials. The email or password provided is incorrect.
+        403:
+          description: User not active. The user account is not active or has been deactivated.
+        404:
+          description: User not found. The email is not registered as a user.
+        500:
+          description: Internal server error. The server encountered an unexpected condition.
