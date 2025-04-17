@@ -8,10 +8,7 @@ const apiKeyInteractionRoutes = express.Router();
 
 apiKeyInteractionRoutes.use(checkAuth);
 
-apiKeyInteractionRoutes.get(
-  '/',
-  apiKeyService.getAllApiKeyInteractions
-);
+apiKeyInteractionRoutes.get('/', apiKeyService.getAllApiKeyInteractions);
 
 apiKeyInteractionRoutes.get(
   '/:id',

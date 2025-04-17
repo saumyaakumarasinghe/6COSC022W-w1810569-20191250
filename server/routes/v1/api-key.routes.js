@@ -8,15 +8,9 @@ const apiKeyRoutes = express.Router();
 
 apiKeyRoutes.use(checkAuth);
 
-apiKeyRoutes.get(
-  '/list',
-  apiKeyService.getApiKeysList
-);
+apiKeyRoutes.get('/list', apiKeyService.getApiKeysList);
 
-apiKeyRoutes.get(
-  '/stats',
-  apiKeyService.getApiKeyStats
-);
+apiKeyRoutes.get('/stats', apiKeyService.getApiKeyStats);
 
 apiKeyRoutes.get('/', apiKeyService.getUserApiKeys);
 
