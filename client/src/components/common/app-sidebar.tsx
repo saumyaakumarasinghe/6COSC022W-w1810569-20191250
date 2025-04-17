@@ -24,8 +24,7 @@ export function AppSidebar() {
       <div className="flex h-full flex-col">
         <SidebarHeader className="border-b flex-shrink-0">
           <Link href="/" className="flex items-center gap-2 px-2 py-1.5">
-            <Globe className="w-6 h-6 text-[#2B4380]" />
-            <span className="font-semibold">Country Info</span>
+            <span className="font-semibold">Dashboard</span>
           </Link>
         </SidebarHeader>
         <SidebarContent className="flex-1">

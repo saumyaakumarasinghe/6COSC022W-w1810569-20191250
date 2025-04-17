@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
-import { AppSidebar } from "@/components/ui/common/app-sidebar";
+import { AppSidebar } from "@/components/common/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { LogOut, ChevronDown, User } from "lucide-react";
+import { ChevronDown, User } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -19,7 +19,7 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { isLoggedIn, user, logout } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
@@ -35,39 +35,37 @@ export default function DashboardLayout({
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen flex-col">
-        <header className="border-b px-4 py-2 flex justify-between items-center bg-white">
-          <div className="font-semibold text-xl text-primary">
-            Country Info System
-          </div>
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              className="flex items-center gap-2"
-              onClick={() => setIsProfileOpen(true)}
-            >
-              <User className="h-4 w-4" />
-              <span>
-                {user.firstName} {user.lastName}
-              </span>
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={logout}
-              className="flex items-center gap-2"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </Button>
-          </div>
-        </header>
-        <div className="flex flex-1 overflow-hidden">
+      <div className="flex h-screen overflow-hidden bg-background">
+        {/* Static sidebar */}
+        <div className="fixed left-0 top-0 bottom-0 z-20">
           <AppSidebar />
-          <main className="flex-1 overflow-auto">{children}</main>
         </div>
 
+        {/* Main content */}
+        <div className="flex-1 ml-64">
+          {/* Fixed header */}
+          <header className="fixed top-0 right-0 left-64 z-10 h-14 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="h-full w-full px-4 flex items-center justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2 hover:bg-accent"
+                onClick={() => setIsProfileOpen(true)}
+              >
+                <User className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium">
+                  {user.firstName} {user.lastName}
+                </span>
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              </Button>
+            </div>
+          </header>
+
+          {/* Scrollable content area */}
+          <main className="pt-14 h-screen overflow-auto">{children}</main>
+        </div>
+
+        {/* Profile dialog */}
         <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
           <DialogContent>
             <DialogHeader>
