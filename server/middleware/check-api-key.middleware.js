@@ -1,9 +1,6 @@
 const { ERROR_MESSAGES } = require('../constants/error.constants');
 const { STATUS_CODES } = require('../constants/status-code.constants');
-const {
-  getApiKeyByKey,
-  updateApiKeyUsageCount,
-} = require('../dao/api-key.dao');
+const { getApiKeyByKey } = require('../dao/api-key.dao');
 const { getUserById } = require('../dao/user.dao');
 
 const validateAPIKey = async (req, res, next) => {
@@ -35,9 +32,6 @@ const validateAPIKey = async (req, res, next) => {
       .status(STATUS_CODES.FORBIDDEN)
       .json({ message: ERROR_MESSAGES.USER_NOT_AUTHORIZED });
   }
-
-  // Update the usage count
-  updateApiKeyUsageCount(apiKey);
 
   next();
 };

@@ -6,7 +6,6 @@ async function createApiKey(key, userId, transaction) {
       {
         key,
         userId,
-        usageCount: 1,
       },
       { transaction }
     );
@@ -36,28 +35,8 @@ async function getApiKeyByKey(key) {
   }
 }
 
-async function updateApiKeyUsageCount(key) {
-  try {
-    const currentUsageCount = await getApiKeyByKey(key);
-    if (!currentUsageCount) {
-      return null;
-    }
-
-    const newUsageCount = currentUsageCount + 1;
-
-    return ApiKey.update(
-      { usageCount: newUsageCount },
-      { where: { key: key } }
-    );
-  } catch (error) {
-    console.error('Error updating api key usage count:', error);
-    throw error;
-  }
-}
-
 module.exports = {
   createApiKey,
   getAllApiKeys,
   getApiKeyByKey,
-  updateApiKeyUsageCount,
 };
