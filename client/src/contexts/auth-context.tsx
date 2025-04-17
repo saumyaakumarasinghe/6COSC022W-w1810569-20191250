@@ -13,12 +13,12 @@ import { api } from "@/lib/api";
 
 interface User {
   id: string;
-  email: string;
-  role: string;
+  name: string;
+  role: "ADMIN" | "USER";
 }
-
 interface AuthContextType {
   isAuthenticated: boolean;
+  isLoggedIn: boolean;
   user: User | null;
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
@@ -95,6 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo(
     () => ({
       isAuthenticated: !!token,
+      isLoggedIn: !!token,
       user,
       token,
       login,
