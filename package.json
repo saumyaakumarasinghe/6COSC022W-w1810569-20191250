@@ -29,12 +29,11 @@
     "url": "https://github.com/saumyaakumarasinghe/6COSC022W-w1810569-20191250/issues"
   },
   "homepage": "https://github.com/saumyaakumarasinghe/6COSC022W-w1810569-20191250#readme",
-  "dependencies": {
-    "husky": "^9.1.7"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.0",
     "prettier": "^3.5.3",
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "husky": "^9.1.7"
   }
 }
