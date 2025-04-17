@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "User Management System",
-  description: "User Management System",
+  title: "Global Country Information System",
+  description: "Global Country Information System",
 };
 
 export default function RootLayout({
