@@ -31,6 +31,17 @@ export default function CountriesPage() {
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const { logout } = useAuth();
 
+  const handleError = useCallback(
+    (err: AxiosError<{ message: string }>) => {
+      if (err.response?.status === 401) {
+        logout();
+        return true;
+      }
+      return false;
+    },
+    [logout],
+  );
+
   const fetchCountries = useCallback(async () => {
     try {
       const response = await api.get("/country");
@@ -38,15 +49,13 @@ export default function CountriesPage() {
       setError("");
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;
-      if (error.response?.status === 401) {
-        logout();
-        return;
+      if (!handleError(error)) {
+        setError(error.response?.data?.message || "Failed to fetch countries");
       }
-      setError(error.response?.data?.message || "Failed to fetch countries");
     } finally {
       setLoading(false);
     }
-  }, [logout]);
+  }, [handleError]);
 
   useEffect(() => {
     fetchCountries();
@@ -59,13 +68,11 @@ export default function CountriesPage() {
       setError("");
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;
-      if (error.response?.status === 401) {
-        logout();
-        return;
+      if (!handleError(error)) {
+        setError(
+          error.response?.data?.message || "Failed to fetch country details",
+        );
       }
-      setError(
-        error.response?.data?.message || "Failed to fetch country details",
-      );
     }
   }
 

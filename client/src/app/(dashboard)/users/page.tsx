@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RoleGuard } from "@/components/common/role-guard";
+import { useAuth } from "@/contexts/auth-context";
 import {
   Dialog,
   DialogContent,
@@ -51,8 +52,26 @@ export default function UsersPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editFormData, setEditFormData] = useState<UserFormData>({});
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [newUserData, setNewUserData] = useState<UserFormData>({});
+  const [newUserData, setNewUserData] = useState<UserFormData>({
+    role: "USER",
+  });
   const router = useRouter();
+  const { logout } = useAuth();
+
+  const handleError = useCallback(
+    (err: AxiosError<{ message: string }>) => {
+      if (err.response?.status === 401) {
+        logout();
+        return true;
+      }
+      if (err.response?.status === 403) {
+        router.push("/countries");
+        return true;
+      }
+      return false;
+    },
+    [router, logout],
+  );
 
   const fetchUsers = useCallback(async () => {
     try {
@@ -61,15 +80,13 @@ export default function UsersPage() {
       setError("");
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;
-      if (error.response?.status === 403) {
-        router.push("/countries");
-        return;
+      if (!handleError(error)) {
+        setError(error.response?.data?.message || "Failed to fetch users");
       }
-      setError(error.response?.data?.message || "Failed to fetch users");
     } finally {
       setLoading(false);
     }
-  }, [router]);
+  }, [handleError]);
 
   useEffect(() => {
     fetchUsers();
@@ -77,17 +94,15 @@ export default function UsersPage() {
 
   async function createUser(data: UserFormData) {
     try {
-      await api.post("/user", data);
-      fetchUsers();
+      await api.post("/user", { ...data, role: data.role || "USER" });
+      await fetchUsers();
       setIsCreateDialogOpen(false);
-      setNewUserData({});
+      setNewUserData({ role: "USER" });
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;
-      if (error.response?.status === 403) {
-        router.push("/countries");
-        return;
+      if (!handleError(error)) {
+        setError(error.response?.data?.message || "Failed to create user");
       }
-      setError(error.response?.data?.message || "Failed to create user");
     }
   }
 
@@ -99,11 +114,9 @@ export default function UsersPage() {
       setEditFormData({});
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;
-      if (error.response?.status === 403) {
-        router.push("/countries");
-        return;
+      if (!handleError(error)) {
+        setError(error.response?.data?.message || "Failed to update user");
       }
-      setError(error.response?.data?.message || "Failed to update user");
     }
   }
 
@@ -113,11 +126,11 @@ export default function UsersPage() {
       fetchUsers();
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;
-      if (error.response?.status === 403) {
-        router.push("/countries");
-        return;
+      if (!handleError(error)) {
+        setError(
+          error.response?.data?.message || "Failed to update user status",
+        );
       }
-      setError(error.response?.data?.message || "Failed to update user status");
     }
   }
 
@@ -127,11 +140,9 @@ export default function UsersPage() {
       fetchUsers();
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;
-      if (error.response?.status === 403) {
-        router.push("/countries");
-        return;
+      if (!handleError(error)) {
+        setError(error.response?.data?.message || "Failed to delete user");
       }
-      setError(error.response?.data?.message || "Failed to delete user");
     }
   }
 

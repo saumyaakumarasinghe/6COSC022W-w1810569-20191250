@@ -1,6 +1,6 @@
 "use client";
 
-import { SettingsIcon, GlobeIcon, UsersIcon } from "lucide-react";
+import { GlobeIcon, UsersIcon } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -12,9 +12,12 @@ import {
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/contexts/auth-context";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function AppSidebar() {
   const { user } = useAuth();
+  const pathname = usePathname();
 
   const items = [
     {
@@ -42,11 +45,11 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
+                  <SidebarMenuButton asChild isActive={pathname === item.url}>
+                    <Link href={item.url} className="flex items-center gap-2">
+                      <item.icon className="w-4 h-4" />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
