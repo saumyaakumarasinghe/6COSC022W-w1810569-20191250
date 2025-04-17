@@ -1,4 +1,9 @@
-const { User } = require('../models/index');
+const {
+  User,
+  ApiKey,
+  ApiKeyInteraction,
+  sequelize,
+} = require('../models/index');
 
 async function createUser(firstName, lastName, email, mobile, password, role) {
   try {
@@ -63,9 +68,38 @@ async function updateUser(userId, userData) {
 }
 
 async function deleteUser(userId) {
+  const transaction = await sequelize.transaction();
   try {
-    return await User.destroy({ where: { id: userId } });
+    // First, find all API keys associated with this user
+    const apiKeys = await ApiKey.findAll({
+      where: { userId },
+      transaction,
+    });
+
+    // For each API key, delete its interactions
+    for (const apiKey of apiKeys) {
+      await ApiKeyInteraction.destroy({
+        where: { apiKeyId: apiKey.id },
+        transaction,
+      });
+    }
+
+    // Now delete all API keys for this user
+    await ApiKey.destroy({
+      where: { userId },
+      transaction,
+    });
+
+    // Finally delete the user
+    const result = await User.destroy({
+      where: { id: userId },
+      transaction,
+    });
+
+    await transaction.commit();
+    return result;
   } catch (error) {
+    await transaction.rollback();
     console.error('Error deleting user:', error);
     throw error;
   }

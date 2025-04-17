@@ -19,6 +19,8 @@ async function createApiKey(key, userId, transaction) {
 
 async function getAllApiKeys() {
   try {
+    console.log('Fetching all API keys');
+
     return ApiKey.findAll({
       include: [
         {

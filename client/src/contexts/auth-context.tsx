@@ -97,6 +97,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         router.push("/countries");
       } catch (error) {
         if (error instanceof AxiosError) {
+          // Provide more specific error messages for known error cases
+          if (
+            error.response?.status === 403 &&
+            error.response?.data?.message === "User not active"
+          ) {
+            throw new Error(
+              "Your account has been deactivated. Please contact an administrator.",
+            );
+          }
           throw new Error(error.response?.data?.message || "Login failed");
         }
         throw new Error("Login failed");

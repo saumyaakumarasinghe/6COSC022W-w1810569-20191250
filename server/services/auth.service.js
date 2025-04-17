@@ -27,7 +27,8 @@ const login = async (req, res) => {
       return res
         .status(STATUS_CODES.NOT_FOUND)
         .json(ERROR_MESSAGES.USER_NOT_FOUND);
-    if (existUser.status === 0)
+
+    if (existUser.status === false)
       return res
         .status(STATUS_CODES.FORBIDDEN)
         .json(ERROR_MESSAGES.USER_NOT_ACTIVE);

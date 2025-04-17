@@ -22,12 +22,6 @@ const getApiKeyInteractionByApiKeyId = async (req, res) => {
     const interaction =
       await apiKeyInteractionDao.getApiKeyInteractionByApiKeyId(id);
 
-    if (!interaction || interaction.length === 0) {
-      return res
-        .status(STATUS_CODES.NOT_FOUND)
-        .json({ error: ERROR_MESSAGES.NOT_FOUND });
-    }
-
     res.status(STATUS_CODES.OK).json(interaction);
   } catch (err) {
     console.log(err.message);
