@@ -8,10 +8,22 @@ const apiKeyRoutes = express.Router();
 
 apiKeyRoutes.use(checkAuth);
 
+// Admin-only routes
 apiKeyRoutes.get(
   '/list',
   checkPermissions([ROLE.ADMIN]),
   apiKeyService.getApiKeysList
 );
+
+apiKeyRoutes.get(
+  '/stats',
+  checkPermissions([ROLE.ADMIN]),
+  apiKeyService.getApiKeyStats
+);
+
+// User routes
+apiKeyRoutes.get('/me', apiKeyService.getUserApiKeys);
+apiKeyRoutes.post('/', apiKeyService.createNewApiKey);
+apiKeyRoutes.delete('/:id', apiKeyService.revokeApiKey);
 
 module.exports = apiKeyRoutes;

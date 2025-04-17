@@ -1,19 +1,19 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import { AxiosError } from "axios";
+import Image from "next/image";
 import api from "@/lib/api";
+import { useErrorHandler } from "@/hooks/use-error-handler";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-import { ErrorMessage } from "@/components/ui/error-message";
-import { useAuth } from "@/contexts/auth-context";
+  Input,
+  Spinner,
+  ErrorMessage,
+} from "@/components/ui";
 
 interface Country {
   name: string;
@@ -29,18 +29,8 @@ export default function CountriesPage() {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
-  const { logout } = useAuth();
 
-  const handleError = useCallback(
-    (error: AxiosError<{ message?: string; error?: string }>) => {
-      if (error.response?.status === 401) {
-        logout();
-        return true;
-      }
-      return false;
-    },
-    [logout],
-  );
+  const handleError = useErrorHandler();
 
   const fetchCountries = useCallback(async () => {
     try {

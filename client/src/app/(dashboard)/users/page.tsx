@@ -1,32 +1,29 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import { PlusIcon, Pencil, Trash2, CheckIcon, XIcon } from "lucide-react";
 import api from "@/lib/api";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { RoleGuard } from "@/components/common/role-guard";
-import { useAuth } from "@/contexts/auth-context";
+import { useErrorHandler } from "@/hooks/use-error-handler";
 import {
+  Button,
+  Input,
+  Label,
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Spinner } from "@/components/ui/spinner";
-import { ErrorMessage } from "@/components/ui/error-message";
+  Spinner,
+  ErrorMessage,
+} from "@/components/ui";
 
 interface User {
   id: number;
@@ -55,23 +52,8 @@ export default function UsersPage() {
   const [newUserData, setNewUserData] = useState<UserFormData>({
     role: "USER",
   });
-  const router = useRouter();
-  const { logout } = useAuth();
 
-  const handleError = useCallback(
-    (error: AxiosError<{ message?: string; error?: string }>) => {
-      if (error.response?.status === 401) {
-        logout();
-        return true;
-      }
-      if (error.response?.status === 403) {
-        router.push("/countries");
-        return true;
-      }
-      return false;
-    },
-    [router, logout],
-  );
+  const handleError = useErrorHandler();
 
   const fetchUsers = useCallback(async () => {
     try {

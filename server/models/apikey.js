@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     key: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     userId: {
       type: DataTypes.INTEGER,
@@ -13,15 +14,20 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: true,
     },
   });
 
-  // Define association here
   ApiKey.associate = (models) => {
     ApiKey.belongsTo(models.User, {
       foreignKey: 'userId',
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
+    });
+
+    ApiKey.hasMany(models.ApiKeyInteraction, {
+      foreignKey: 'apiKeyId',
+      as: 'interactions',
     });
   };
 

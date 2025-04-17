@@ -1,19 +1,19 @@
 "use client";
 
-import { Globe, Users, LogOut } from "lucide-react";
+import { Globe, Users, LogOut, Key } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/auth-context";
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   Sidebar,
-  SidebarHeader,
   SidebarContent,
   SidebarFooter,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-} from "@/components/ui/sidebar";
+} from "@/components/ui";
 
 export function AppSidebar() {
   const { logout, user } = useAuth();
@@ -47,6 +47,14 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             )}
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={pathname === "/api-keys"}>
+                <Link href="/api-keys">
+                  <Key className="w-4 h-4" />
+                  <span>API Keys</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="border-t flex-shrink-0">
