@@ -67,7 +67,8 @@ This full-stack project serves as a centralized platform to view global country 
 2. Start the application using Docker:
 
    ```bash
-   docker-compose up --build
+   docker:build
+   docker:up
    ```
 
 3. Access the application:

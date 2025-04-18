@@ -6,7 +6,8 @@ paths:
         - API Keys
       summary: Generate a new API key
       security:
-        - bearerAuth: []
+        - ApiKeyAuth: []
+        - BearerAuth: []
       responses:
         201:
           description: API key generated successfully
@@ -32,7 +33,8 @@ paths:
         - API Keys
       summary: Get all API keys (Admin only)
       security:
-        - bearerAuth: []
+        - ApiKeyAuth: []
+        - BearerAuth: []
       responses:
         200:
           description: List of all API keys with user details
@@ -55,7 +57,8 @@ paths:
         - API Keys
       summary: Get current user's API keys
       security:
-        - bearerAuth: []
+        - ApiKeyAuth: []
+        - BearerAuth: []
       responses:
         200:
           description: List of user's API keys
@@ -78,7 +81,8 @@ paths:
         - API Keys
       summary: Revoke an API key
       security:
-        - bearerAuth: []
+        - ApiKeyAuth: []
+        - BearerAuth: []
       parameters:
         - name: keyId
           in: path
