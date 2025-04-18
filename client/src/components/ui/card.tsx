@@ -1,7 +1,9 @@
 import * as React from "react";
 
+// Utility for combining class names conditionally
 import { cn } from "@/lib/utils";
 
+// Root card wrapper
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -15,6 +17,7 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+// Header section of the card, typically contains title and action
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -28,6 +31,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+// Main title of the card
 function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -38,6 +42,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+// Description text under the title (subheading)
 function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -48,6 +53,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+// Optional actions in the header (e.g., buttons, icons)
 function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -61,6 +67,7 @@ function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+// Main body content of the card
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -71,6 +78,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+// Footer section for actions like buttons or metadata
 function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -81,6 +89,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+// Export all card parts for usage in composition
 export {
   Card,
   CardHeader,

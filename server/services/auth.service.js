@@ -2,7 +2,7 @@ const { ROLE } = require('../constants');
 const userDao = require('../dao/user.dao');
 const { hashPassword, comparePassword } = require('./password.service');
 const { generateToken } = require('./token.service');
-const { generateApiKey } = require('./api-key.service');
+const { generateApiKey } = require('./crypto.service');
 const { createApiKey } = require('../dao/api-key.dao');
 const { updateUser } = require('../dao/user.dao');
 const { sequelize } = require('../models/index');
@@ -27,7 +27,8 @@ const login = async (req, res) => {
       return res
         .status(STATUS_CODES.NOT_FOUND)
         .json(ERROR_MESSAGES.USER_NOT_FOUND);
-    if (existUser.status === 0)
+
+    if (existUser.status === false)
       return res
         .status(STATUS_CODES.FORBIDDEN)
         .json(ERROR_MESSAGES.USER_NOT_ACTIVE);

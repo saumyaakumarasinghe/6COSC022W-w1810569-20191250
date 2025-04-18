@@ -1,10 +1,8 @@
 const { ERROR_MESSAGES } = require('../constants/error.constants');
 const { STATUS_CODES } = require('../constants/status-code.constants');
-const {
-  getApiKeyByKey,
-  updateApiKeyUsageCount,
-} = require('../dao/api-key.dao');
+const { getApiKeyByKey } = require('../dao/api-key.dao');
 const { getUserById } = require('../dao/user.dao');
+const { createApiKeyInteraction } = require('../dao/api-key-interaction.dao');
 
 const validateAPIKey = async (req, res, next) => {
   const apiKey = req.headers['x-api-key'];
@@ -36,8 +34,11 @@ const validateAPIKey = async (req, res, next) => {
       .json({ message: ERROR_MESSAGES.USER_NOT_AUTHORIZED });
   }
 
-  // Update the usage count
-  updateApiKeyUsageCount(apiKey);
+  await createApiKeyInteraction(
+    key.id,
+    Number(user.id),
+    `${req.method} ${req.originalUrl}`
+  );
 
   next();
 };

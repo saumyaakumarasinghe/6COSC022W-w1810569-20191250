@@ -164,11 +164,14 @@ const deleteUser = async (req, res) => {
         .status(STATUS_CODES.FORBIDDEN)
         .json(ERROR_MESSAGES.SELF_DELETE_NOT_ALLOWED);
 
-    const deletedUser = await userDao.deleteUser(id);
+    await userDao.deleteUser(id);
 
-    res.status(STATUS_CODES.OK).json('User deleted successfully');
+    res.status(STATUS_CODES.OK).json({ message: 'User deleted successfully' });
   } catch (err) {
-    console.log(err.message);
+    console.error('Error deleting user:', err);
+    res
+      .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .json({ error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
   }
 };
 

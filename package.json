@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "6COSC022W Coursework 1 (2024/25)",
   "scripts": {
-    "build:both": "npm run build --prefix client && npm run build --prefix server",
     "install:both": "npm install && npm install --prefix client && npm install --prefix server",
-    "run:both": "concurrently -n \"CLIENT,SERVER\" -c \"cyan.bold,green.bold\" \"npm start --prefix client\" \"npm start --prefix server\"",
     "dev": "concurrently -n \"CLIENT,SERVER\" -c \"cyan.bold,green.bold\" \"npm run dev --prefix client\" \"npm run start:dev --prefix server\"",
     "start": "npm run run:both",
     "format:fix": "prettier --write .",
@@ -29,12 +27,11 @@
     "url": "https://github.com/saumyaakumarasinghe/6COSC022W-w1810569-20191250/issues"
   },
   "homepage": "https://github.com/saumyaakumarasinghe/6COSC022W-w1810569-20191250#readme",
-  "dependencies": {
-    "husky": "^9.1.7"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.0",
     "prettier": "^3.5.3",
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "husky": "^9.1.7"
   }
 }

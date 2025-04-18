@@ -1,0 +1,109 @@
+openapi: 3.0.0
+paths:
+  /api/v1/api-key:
+    post:
+      tags:
+        - API Keys
+      summary: Generate a new API key
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      responses:
+        201:
+          description: API key generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: API key generated successfully
+                  apiKey:
+                    type: string
+                    example: 1234567890abcdef1234567890abcdef
+        401:
+          description: Unauthorized. Missing or invalid API key or JWT token.
+        403:
+          description: Forbidden. The API key or JWT token does not have permission to access this resource.
+        500:
+          description: Internal server error. An error occurred while processing the request.
+    get:
+      tags:
+        - API Keys
+      summary: Get all API keys (Admin only)
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      responses:
+        200:
+          description: List of all API keys with user details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiKeyWithUser'
+        401:
+          description: Unauthorized. Missing or invalid API key or JWT token.
+        403:
+          description: Forbidden. The API key or JWT token does not have permission to access this resource.
+        500:
+          description: Internal server error. An error occurred while processing the request.
+
+  /api/v1/api-key/:
+    get:
+      tags:
+        - API Keys
+      summary: Get current user's API keys
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      responses:
+        200:
+          description: List of user's API keys
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiKey'
+        401:
+          description: Unauthorized. Missing or invalid API key or JWT token.
+        403:
+          description: Forbidden. The API key or JWT token does not have permission to access this resource.
+        500:
+          description: Internal server error. An error occurred while processing the request.
+
+  /api/v1/api-key/{keyId}:
+    delete:
+      tags:
+        - API Keys
+      summary: Revoke an API key
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: keyId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the API key to revoke
+      responses:
+        200:
+          description: API key revoked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: API key revoked successfully
+        401:
+          description: Unauthorized. Missing or invalid API key or JWT token.
+        403:
+          description: Forbidden. The API key or JWT token does not have permission to access this resource.
+        500:
+          description: Internal server error. An error occurred while processing the request.
