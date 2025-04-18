@@ -5,7 +5,7 @@
 [![Express](https://img.shields.io/badge/Express-4.21.1-green)](https://expressjs.com/)
 [![MySQL](https://img.shields.io/badge/MySQL-3.11.3-orange)](https://www.mysql.com/)
 
-A robust Node.js Express server-side application serving as the 6COSC022W-Coursework-1-w1810569-20191250 Backend-for-Frontend (BFF) system.
+A robust full-stack application developed as part of 6COSC022W Coursework 1 by Saumya Kumarasinghe. This system includes an API-driven backend built with Node.js + Express and a Next.js (React) frontend. It provides secure role-based access, API key management, and global country data exploration features.
 
 ## Table of Contents
 
@@ -31,7 +31,7 @@ A robust Node.js Express server-side application serving as the 6COSC022W-Course
 
 ## Overview
 
-Add a brief description of the project here.
+This full-stack project serves as a centralized platform to view global country information and manage users and API keys with administrative controls. The frontend is powered by Next.js and connects securely to a backend API, which enforces authentication and data access rules.
 
 ## Features
 
@@ -39,8 +39,8 @@ Add a brief description of the project here.
 - SQLite database integration with migration support
 - Authentication and authorization
 - API protection
-- Comprehensive testing suite (unit and E2E)
-- CI/CD pipelines for multiple environments
+- Comprehensive testing (endpoint testing)
+- Hooks
 
 ## Prerequisites
 
@@ -120,20 +120,6 @@ Add a brief description of the project here.
    - Development: `npm run dev`
    - Production: `npm run build && npm start`
 
-## Environment Files
-
-Each part of the application (server and client) has its own environment files:
-
-### Server Environment Files
-
-- `.env.dev` - Development environment variables
-- `.env.test` - Testing environment variables
-- `.env.prod` - Production environment variables
-
-### Client Environment Files
-
-- `.env.local` - Local environment variables
-- `.env.production` - Production environment variables
 
 ## API Documentation
 
@@ -146,21 +132,6 @@ Each part of the application (server and client) has its own environment files:
 - Location: `server/database/database.db`
 - Test database: `server/database/test_database.db`
 
-## Available Scripts
-
-### Server Scripts
-
-- `npm run start:dev` - Start server in development mode
-- `npm run start:test` - Start server in test mode
-- `npm run start:prod` - Start server in production mode
-- `npm run migrate` - Run database migrations
-- `npm run seed:all` - Run database seeders
-
-### Client Scripts
-
-- `npm run dev` - Start Next.js development server
-- `npm run build` - Build for production
-- `npm start` - Start production server
 
 ## Common Issues & Solutions
 
@@ -177,15 +148,6 @@ Each part of the application (server and client) has its own environment files:
 3. Environment Variables:
    - Make sure all required environment files are present
    - Check environment variable values match your setup
-
-## For Your Viva
-
-1. Clone your repository
-2. Choose either Docker or Manual setup method
-3. Ensure all environment files are properly configured
-4. Start the application
-5. Verify both frontend and backend are running
-6. Access API documentation to show available endpoints
 
 ## License
 
