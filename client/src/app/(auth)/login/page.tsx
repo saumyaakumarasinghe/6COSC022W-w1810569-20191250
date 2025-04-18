@@ -42,9 +42,12 @@ export default function LoginPage() {
 
     try {
       await login(data.email, data.password); // Attempt login with provided credentials
-    } catch (err: any) {
-      // Show error if login fails
-      setError(err.message || "Invalid email or password");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Invalid email or password");
+      }
     } finally {
       setLoading(false); // Stop loading indicator
     }
