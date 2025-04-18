@@ -11,7 +11,7 @@ module.exports = {
         mobile: '0701454255',
         email: 'saumya.20191250@iit.ac.lk',
         password:
-          '$2b$12$99UE8eiRzjAcPI/v7A6mUeVv1A5VG2N6hDqq9Y3pK9txNZhoIQSIa', //TODO remove this 123456
+          '$2b$12$99UE8eiRzjAcPI/v7A6mUeVv1A5VG2N6hDqq9Y3pK9txNZhoIQSIa',
         lastActivateAt: new Date(),
         role: ROLE.ADMIN,
         status: true,
