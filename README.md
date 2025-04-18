@@ -121,7 +121,6 @@ This full-stack project serves as a centralized platform to view global country 
    - Development: `npm run dev`
    - Production: `npm run build && npm start`
 
-
 ## API Documentation
 
 - When running in development mode, access Swagger documentation at: http://localhost:8000/api-docs
@@ -132,7 +131,6 @@ This full-stack project serves as a centralized platform to view global country 
 - SQLite database is used
 - Location: `server/database/database.db`
 - Test database: `server/database/test_database.db`
-
 
 ## Common Issues & Solutions
 
