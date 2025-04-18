@@ -1,8 +1,13 @@
-"use client";
+"use client"; // Marks this as a client-side component
 
+// React and Next.js core imports
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
+// Icon imports
 import { ChevronDown, User } from "lucide-react";
+
+// Custom context and components
 import { useAuth } from "@/contexts/auth-context";
 import { AppSidebar } from "@/components/common/app-sidebar";
 import {
@@ -14,21 +19,24 @@ import {
   SidebarProvider,
 } from "@/components/ui";
 
+// Layout wrapper for dashboard pages
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { isLoggedIn, user } = useAuth();
-  const router = useRouter();
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const { isLoggedIn, user } = useAuth(); // Access authentication status and user info
+  const router = useRouter(); // Used for redirection
+  const [isProfileOpen, setIsProfileOpen] = useState(false); // Toggle for profile dialog
 
+  // Redirect to login if user is not authenticated
   useEffect(() => {
     if (!isLoggedIn) {
       router.push("/login");
     }
   }, [isLoggedIn, router]);
 
+  // Prevent UI from rendering until auth state is validated
   if (!isLoggedIn || !user) {
     return null;
   }
@@ -36,14 +44,14 @@ export default function DashboardLayout({
   return (
     <SidebarProvider>
       <div className="flex h-screen overflow-hidden bg-background">
-        {/* Static sidebar */}
+        {/* Sidebar positioned on the left */}
         <div className="fixed left-0 top-0 bottom-0 z-20">
           <AppSidebar />
         </div>
 
-        {/* Main content */}
+        {/* Main content area with left margin to account for sidebar */}
         <div className="flex-1 ml-64">
-          {/* Fixed header */}
+          {/* Fixed header with profile button */}
           <header className="fixed top-0 right-0 left-64 z-10 h-14 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="h-full w-full px-4 flex items-center justify-end">
               <Button
@@ -61,17 +69,18 @@ export default function DashboardLayout({
             </div>
           </header>
 
-          {/* Scrollable content area */}
+          {/* Main scrollable area for dynamic dashboard content */}
           <main className="pt-14 h-screen overflow-auto">{children}</main>
         </div>
 
-        {/* Profile dialog */}
+        {/* Profile information dialog */}
         <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Profile Information</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4">
+              {/* Full Name */}
               <div className="flex flex-col gap-1">
                 <span className="text-sm font-medium text-muted-foreground">
                   Full Name
@@ -80,12 +89,14 @@ export default function DashboardLayout({
                   {user.firstName} {user.lastName}
                 </span>
               </div>
+              {/* Email */}
               <div className="flex flex-col gap-1">
                 <span className="text-sm font-medium text-muted-foreground">
                   Email
                 </span>
                 <span className="text-base">{user.email}</span>
               </div>
+              {/* Role */}
               <div className="flex flex-col gap-1">
                 <span className="text-sm font-medium text-muted-foreground">
                   Role

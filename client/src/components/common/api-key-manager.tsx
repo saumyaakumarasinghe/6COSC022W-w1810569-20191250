@@ -1,7 +1,10 @@
-"use client";
+"use client"; // Marks this as a client-side component
 
+// React and Axios imports
 import { useState, useCallback, useEffect } from "react";
 import { AxiosError } from "axios";
+
+// Icon imports
 import {
   CopyIcon,
   PlusIcon,
@@ -9,8 +12,12 @@ import {
   ChevronRight,
   ChevronDown,
 } from "lucide-react";
+
+// Internal API and error handler
 import api from "@/lib/api";
 import { useErrorHandler } from "@/hooks/use-error-handler";
+
+// UI components
 import {
   Button,
   Table,
@@ -22,6 +29,7 @@ import {
   Spinner,
 } from "@/components/ui";
 
+// Type definitions
 interface ApiKeyInteraction {
   id: number;
   apiKeyId: number;
@@ -56,12 +64,14 @@ interface ApiKeyManagerProps {
   onError?: (error: string) => void;
 }
 
+// Main API Key Manager Component
 export function ApiKeyManager({
   apiKeys = [],
   onKeyAdded,
   onKeyDeleted,
   onError,
 }: ApiKeyManagerProps) {
+  // State management
   const [loading, setLoading] = useState(false);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [currentApiKey, setCurrentApiKey] = useState<string | null>(null);
@@ -70,7 +80,7 @@ export function ApiKeyManager({
   const [loadingInteractions, setLoadingInteractions] = useState(false);
   const handleError = useErrorHandler();
 
-  // Get the current API key from localStorage when the component mounts
+  // Load current API key from localStorage on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedApiKey = localStorage.getItem("apiKey");
@@ -78,39 +88,33 @@ export function ApiKeyManager({
     }
   }, []);
 
+  // Generate a new API key
   const generateKey = useCallback(async () => {
     try {
       setLoading(true);
       await api.post("/api-key");
-      if (typeof onKeyAdded === "function") {
-        onKeyAdded();
-      }
+      if (typeof onKeyAdded === "function") onKeyAdded();
     } catch (err) {
       const error = err as AxiosError<{ message?: string; error?: string }>;
-      if (!handleError(error)) {
-        if (typeof onError === "function") {
-          onError(error.message || "Failed to generate API key");
-        }
+      if (!handleError(error) && typeof onError === "function") {
+        onError(error.message || "Failed to generate API key");
       }
     } finally {
       setLoading(false);
     }
   }, [handleError, onKeyAdded, onError]);
 
+  // Delete an existing API key
   const deleteKey = useCallback(
     async (id: number) => {
       try {
         setLoading(true);
         await api.delete(`/api-key/${id}`);
-        if (typeof onKeyDeleted === "function") {
-          onKeyDeleted();
-        }
+        if (typeof onKeyDeleted === "function") onKeyDeleted();
       } catch (err) {
         const error = err as AxiosError<{ message?: string; error?: string }>;
-        if (!handleError(error)) {
-          if (typeof onError === "function") {
-            onError(error.message || "Failed to delete API key");
-          }
+        if (!handleError(error) && typeof onError === "function") {
+          onError(error.message || "Failed to delete API key");
         }
       } finally {
         setLoading(false);
@@ -119,33 +123,31 @@ export function ApiKeyManager({
     [handleError, onKeyDeleted, onError],
   );
 
+  // Copy API key to clipboard
   const copyToClipboard = useCallback((key: string) => {
     if (key && navigator.clipboard) {
       navigator.clipboard.writeText(key);
       setSelectedKey(key);
-      setTimeout(() => setSelectedKey(null), 2000);
+      setTimeout(() => setSelectedKey(null), 2000); // Reset label after 2s
     }
   }, []);
 
-  // Function to check if an API key is the current one in use
+  // Check if a key is the current API key
   const isCurrentKey = useCallback(
-    (key?: string) => {
-      return key != null && currentApiKey != null && key === currentApiKey;
-    },
+    (key?: string) => key != null && currentApiKey === key,
     [currentApiKey],
   );
 
+  // Expand/collapse and fetch usage interactions for a key
   const toggleInteractions = useCallback(
     async (apiKeyId?: number) => {
       if (apiKeyId == null) return;
 
-      // If already expanded, just collapse it
       if (expandedApiKeyId === apiKeyId) {
-        setExpandedApiKeyId(null);
+        setExpandedApiKeyId(null); // Collapse if already expanded
         return;
       }
 
-      // Otherwise, fetch interactions and expand
       try {
         setLoadingInteractions(true);
         setExpandedApiKeyId(apiKeyId);
@@ -153,13 +155,10 @@ export function ApiKeyManager({
         setInteractions(Array.isArray(response.data) ? response.data : []);
       } catch (err) {
         const error = err as AxiosError<{ message?: string; error?: string }>;
-        if (!handleError(error)) {
-          if (typeof onError === "function") {
-            onError(error.message || "Failed to fetch API key interactions");
-          }
+        if (!handleError(error) && typeof onError === "function") {
+          onError(error.message || "Failed to fetch API key interactions");
         }
-        // If there's an error, collapse the row
-        setExpandedApiKeyId(null);
+        setExpandedApiKeyId(null); // Collapse on error
       } finally {
         setLoadingInteractions(false);
       }
@@ -167,9 +166,10 @@ export function ApiKeyManager({
     [expandedApiKeyId, handleError, onError],
   );
 
-  // Safely handle apiKeys being null or undefined
+  // Normalize API key input to always return an array
   const safeApiKeys = Array.isArray(apiKeys) ? apiKeys : [];
 
+  // Render fallback when no API keys are available
   if (!safeApiKeys.length) {
     return (
       <div className="text-center py-6">
@@ -186,8 +186,10 @@ export function ApiKeyManager({
     );
   }
 
+  // Main UI render
   return (
     <div className="space-y-4">
+      {/* Generate key button */}
       <div className="flex justify-end">
         <Button onClick={generateKey} disabled={loading}>
           {loading ? (
@@ -199,6 +201,7 @@ export function ApiKeyManager({
         </Button>
       </div>
 
+      {/* API key table */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -214,10 +217,12 @@ export function ApiKeyManager({
           <TableBody>
             {safeApiKeys.map((apiKey) => (
               <>
+                {/* API key row */}
                 <TableRow
                   key={apiKey?.id ?? "unknown"}
                   className={isCurrentKey(apiKey?.key) ? "bg-blue-50" : ""}
                 >
+                  {/* Expand/collapse toggle */}
                   <TableCell style={{ padding: "0 0 0 16px" }}>
                     <Button
                       variant="ghost"
@@ -235,6 +240,8 @@ export function ApiKeyManager({
                       )}
                     </Button>
                   </TableCell>
+
+                  {/* API key preview */}
                   <TableCell className="font-mono text-sm">
                     {apiKey?.key ? `${apiKey.key.substring(0, 32)}...` : "N/A"}
                     {isCurrentKey(apiKey?.key) && (
@@ -243,6 +250,8 @@ export function ApiKeyManager({
                       </span>
                     )}
                   </TableCell>
+
+                  {/* User info */}
                   <TableCell>
                     {apiKey?.User ? (
                       <div>
@@ -260,11 +269,15 @@ export function ApiKeyManager({
                       </span>
                     )}
                   </TableCell>
+
+                  {/* Created date */}
                   <TableCell>
                     {apiKey?.createdAt
                       ? new Date(apiKey.createdAt).toLocaleDateString()
                       : "Unknown date"}
                   </TableCell>
+
+                  {/* Status badge */}
                   <TableCell>
                     <span
                       className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
@@ -276,6 +289,8 @@ export function ApiKeyManager({
                       {apiKey?.status ? "Active" : "Inactive"}
                     </span>
                   </TableCell>
+
+                  {/* Action buttons */}
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Button
@@ -289,6 +304,7 @@ export function ApiKeyManager({
                         <CopyIcon className="w-4 h-4 mr-2" />
                         {selectedKey === apiKey?.key ? "Copied!" : "Copy"}
                       </Button>
+
                       <Button
                         variant="destructive"
                         size="sm"
@@ -311,6 +327,8 @@ export function ApiKeyManager({
                     </div>
                   </TableCell>
                 </TableRow>
+
+                {/* Usage history expansion row */}
                 {expandedApiKeyId === apiKey?.id && (
                   <TableRow>
                     <TableCell colSpan={6} className="p-0">
@@ -318,6 +336,7 @@ export function ApiKeyManager({
                         <h4 className="text-sm font-medium mb-2">
                           API Key Usage History
                         </h4>
+
                         {loadingInteractions ? (
                           <div className="flex justify-center p-4">
                             <Spinner size={24} />

@@ -1,33 +1,38 @@
-"use client";
+"use client"; // Indicates this is a client-side component
 
 import * as React from "react";
-import * as SheetPrimitive from "@radix-ui/react-dialog";
-import { XIcon } from "lucide-react";
+import * as SheetPrimitive from "@radix-ui/react-dialog"; // Radix Dialog used as the base for Sheet
+import { XIcon } from "lucide-react"; // Icon for close button
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"; // Utility for conditional classNames
 
+// Root component to wrap the sheet
 function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />;
 }
 
+// Trigger component to open the sheet
 function SheetTrigger({
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Trigger>) {
   return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />;
 }
 
+// Close button component (can be used inside content)
 function SheetClose({
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Close>) {
   return <SheetPrimitive.Close data-slot="sheet-close" {...props} />;
 }
 
+// Portal wrapper to render sheet content outside the DOM tree
 function SheetPortal({
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Portal>) {
   return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />;
 }
 
+// Overlay that appears behind the sheet (dimmed background)
 function SheetOverlay({
   className,
   ...props
@@ -44,10 +49,11 @@ function SheetOverlay({
   );
 }
 
+// Main sheet content container
 function SheetContent({
   className,
   children,
-  side = "right",
+  side = "right", // Default slide-in direction
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: "top" | "right" | "bottom" | "left";
@@ -58,7 +64,10 @@ function SheetContent({
       <SheetPrimitive.Content
         data-slot="sheet-content"
         className={cn(
+          // Base styling and transitions
           "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col gap-4 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+
+          // Side-specific positioning and animation
           side === "right" &&
             "data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm",
           side === "left" &&
@@ -67,11 +76,14 @@ function SheetContent({
             "data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top inset-x-0 top-0 h-auto border-b",
           side === "bottom" &&
             "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom inset-x-0 bottom-0 h-auto border-t",
+
           className,
         )}
         {...props}
       >
         {children}
+
+        {/* Built-in close button in the top-right corner */}
         <SheetPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
           <XIcon className="size-4" />
           <span className="sr-only">Close</span>
@@ -81,6 +93,7 @@ function SheetContent({
   );
 }
 
+// Header section of the sheet (for title, etc.)
 function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -91,6 +104,7 @@ function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+// Footer section (usually for buttons or actions)
 function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -101,6 +115,7 @@ function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+// Title component for the sheet
 function SheetTitle({
   className,
   ...props
@@ -114,6 +129,7 @@ function SheetTitle({
   );
 }
 
+// Optional description under the title
 function SheetDescription({
   className,
   ...props
@@ -127,6 +143,7 @@ function SheetDescription({
   );
 }
 
+// Export all components for composable use
 export {
   Sheet,
   SheetTrigger,

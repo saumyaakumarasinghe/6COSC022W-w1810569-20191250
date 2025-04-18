@@ -13,6 +13,7 @@
     "stylelintcache",
     "eslintcache",
     "nuxt",
-    "dotenv"
+    "dotenv",
+    "turbopack"
   ]
 }

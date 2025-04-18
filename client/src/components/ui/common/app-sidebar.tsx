@@ -1,6 +1,9 @@
-"use client";
+"use client"; // Marks this file as a client-side component
 
+// Icon imports
 import { GlobeIcon, UsersIcon } from "lucide-react";
+
+// Sidebar component and layout utilities
 import {
   Sidebar,
   SidebarContent,
@@ -11,14 +14,18 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
+
+// Authentication and routing
 import { useAuth } from "@/contexts/auth-context";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+// Sidebar navigation component
 export function AppSidebar() {
-  const { user } = useAuth();
-  const pathname = usePathname();
+  const { user } = useAuth(); // Get current user from auth context
+  const pathname = usePathname(); // Get current route
 
+  // Define sidebar items, with conditional item for ADMIN users
   const items = [
     {
       title: "Countries",
@@ -33,16 +40,18 @@ export function AppSidebar() {
             icon: UsersIcon,
           },
         ]
-      : []),
+      : []), // Only include "Users" if role is ADMIN
   ];
 
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
+          {/* Section label */}
           <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
+              {/* Render each menu item */}
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={pathname === item.url}>

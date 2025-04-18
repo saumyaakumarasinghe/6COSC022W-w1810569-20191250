@@ -1,3 +1,5 @@
+// Re-exporting all UI components from their respective modules for simplified imports
+
 export * from "./button";
 export * from "./card";
 export * from "./dialog";

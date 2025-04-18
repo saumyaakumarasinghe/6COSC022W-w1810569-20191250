@@ -1,11 +1,16 @@
-"use client";
+"use client"; // Declares this as a client-side component in Next.js
 
+// Importing core dependencies and required icons
 import { useState, useEffect, useCallback } from "react";
 import { AxiosError } from "axios";
 import { PlusIcon, Pencil, Trash2, CheckIcon, XIcon } from "lucide-react";
+
+// API and custom utilities
 import api from "@/lib/api";
 import { RoleGuard } from "@/components/common/role-guard";
 import { useErrorHandler } from "@/hooks/use-error-handler";
+
+// UI components
 import {
   Button,
   Input,
@@ -25,6 +30,7 @@ import {
   ErrorMessage,
 } from "@/components/ui";
 
+// Type definitions for user data and form handling
 interface User {
   id: number;
   firstName: string;
@@ -41,6 +47,7 @@ interface UserFormData extends Partial<User> {
 }
 
 export default function UsersPage() {
+  // State variables for managing user data and UI state
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -53,8 +60,9 @@ export default function UsersPage() {
     role: "USER",
   });
 
-  const handleError = useErrorHandler();
+  const handleError = useErrorHandler(); // Custom error handler hook
 
+  // Fetch all users from the API
   const fetchUsers = useCallback(async () => {
     try {
       const response = await api.get("/user");
@@ -70,10 +78,12 @@ export default function UsersPage() {
     }
   }, [handleError]);
 
+  // Initial fetch of users on component mount
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
 
+  // API call to create a new user
   async function createUser(data: UserFormData) {
     try {
       await api.post("/user", { ...data, role: data.role || "USER" });
@@ -88,6 +98,7 @@ export default function UsersPage() {
     }
   }
 
+  // API call to update existing user
   async function updateUser(id: number, data: UserFormData) {
     try {
       await api.put(`/user/${id}`, data);
@@ -102,6 +113,7 @@ export default function UsersPage() {
     }
   }
 
+  // API call to toggle user status (active/inactive)
   async function updateUserStatus(id: number, status: boolean) {
     try {
       await api.patch(`/user/${id}/status`, { status });
@@ -114,6 +126,7 @@ export default function UsersPage() {
     }
   }
 
+  // API call to delete a user
   async function deleteUser(id: number) {
     try {
       await api.delete(`/user/${id}`);
@@ -126,6 +139,7 @@ export default function UsersPage() {
     }
   }
 
+  // Filter users based on search input (by name or email)
   const filteredUsers = users.filter(
     (user) =>
       user.firstName.toLowerCase().includes(search.toLowerCase()) ||
@@ -133,6 +147,7 @@ export default function UsersPage() {
       user.email.toLowerCase().includes(search.toLowerCase()),
   );
 
+  // Show error UI if API request fails
   if (error) {
     return (
       <RoleGuard allowedRoles={["ADMIN"]}>
@@ -146,6 +161,7 @@ export default function UsersPage() {
   return (
     <RoleGuard allowedRoles={["ADMIN"]}>
       <div className="p-6 space-y-6">
+        {/* Page header with title and search bar */}
         <div className="flex justify-between items-center gap-4 flex-col sm:flex-row">
           <h1 className="text-2xl font-semibold">Users</h1>
           <div className="flex items-center gap-4">
@@ -155,6 +171,8 @@ export default function UsersPage() {
               onChange={(e) => setSearch(e.target.value)}
               className="w-[200px]"
             />
+
+            {/* Dialog trigger for creating a new user */}
             <Dialog
               open={isCreateDialogOpen}
               onOpenChange={setIsCreateDialogOpen}
@@ -169,7 +187,10 @@ export default function UsersPage() {
                 <DialogHeader>
                   <DialogTitle>Create New User</DialogTitle>
                 </DialogHeader>
+
+                {/* Form fields for new user creation */}
                 <div className="grid gap-4 py-4">
+                  {/* First Name */}
                   <div className="grid gap-2">
                     <Label htmlFor="firstName">First Name</Label>
                     <Input
@@ -183,6 +204,7 @@ export default function UsersPage() {
                       }
                     />
                   </div>
+                  {/* Last Name */}
                   <div className="grid gap-2">
                     <Label htmlFor="lastName">Last Name</Label>
                     <Input
@@ -196,6 +218,7 @@ export default function UsersPage() {
                       }
                     />
                   </div>
+                  {/* Email */}
                   <div className="grid gap-2">
                     <Label htmlFor="email">Email</Label>
                     <Input
@@ -210,6 +233,7 @@ export default function UsersPage() {
                       }
                     />
                   </div>
+                  {/* Mobile */}
                   <div className="grid gap-2">
                     <Label htmlFor="mobile">Mobile</Label>
                     <Input
@@ -224,6 +248,7 @@ export default function UsersPage() {
                       }
                     />
                   </div>
+                  {/* Password */}
                   <div className="grid gap-2">
                     <Label htmlFor="password">Password</Label>
                     <Input
@@ -237,6 +262,7 @@ export default function UsersPage() {
                       }
                     />
                   </div>
+                  {/* Role Selector */}
                   <div className="grid gap-2">
                     <Label htmlFor="role">Role</Label>
                     <select
@@ -254,6 +280,7 @@ export default function UsersPage() {
                       <option value="ADMIN">Admin</option>
                     </select>
                   </div>
+                  {/* Submit button */}
                   <Button
                     onClick={() => createUser(newUserData)}
                     className="w-full mt-4"
@@ -266,6 +293,7 @@ export default function UsersPage() {
           </div>
         </div>
 
+        {/* User table */}
         <div className="rounded-md border">
           <Table>
             <TableHeader>
@@ -279,6 +307,7 @@ export default function UsersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
+              {/* Show loading skeleton */}
               {loading
                 ? Array.from({ length: 5 }).map((_, i) => (
                     <TableRow key={i}>
@@ -291,6 +320,7 @@ export default function UsersPage() {
                   ))
                 : filteredUsers.map((user) => (
                     <TableRow key={user.id}>
+                      {/* Name column (editable) */}
                       <TableCell>
                         {isEditing && selectedUser?.id === user.id ? (
                           <div className="flex gap-2">
@@ -319,6 +349,8 @@ export default function UsersPage() {
                           `${user.firstName} ${user.lastName}`
                         )}
                       </TableCell>
+
+                      {/* Email column (editable) */}
                       <TableCell>
                         {isEditing && selectedUser?.id === user.id ? (
                           <Input
@@ -334,6 +366,8 @@ export default function UsersPage() {
                           user.email
                         )}
                       </TableCell>
+
+                      {/* Mobile column (editable) */}
                       <TableCell>
                         {isEditing && selectedUser?.id === user.id ? (
                           <Input
@@ -349,6 +383,8 @@ export default function UsersPage() {
                           user.mobile
                         )}
                       </TableCell>
+
+                      {/* Role column (editable) */}
                       <TableCell>
                         {isEditing && selectedUser?.id === user.id ? (
                           <select
@@ -368,6 +404,8 @@ export default function UsersPage() {
                           user.role
                         )}
                       </TableCell>
+
+                      {/* Status toggle button */}
                       <TableCell>
                         <Button
                           variant={user.status ? "default" : "destructive"}
@@ -379,6 +417,8 @@ export default function UsersPage() {
                           {user.status ? "Active" : "Inactive"}
                         </Button>
                       </TableCell>
+
+                      {/* Edit and Delete actions */}
                       <TableCell>
                         <div className="flex items-center gap-2">
                           {isEditing && selectedUser?.id === user.id ? (
