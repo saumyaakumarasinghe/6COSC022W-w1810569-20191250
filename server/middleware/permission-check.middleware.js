@@ -29,4 +29,4 @@ const checkPermissions = (allowedRoles) => {
   };
 };
 
-module.exports = checkPermissions; // Export as default
+module.exports = checkPermissions;

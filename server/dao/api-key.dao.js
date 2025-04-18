@@ -1,5 +1,4 @@
-const { ApiKey, User, sequelize } = require('../models/index');
-const { Op } = require('sequelize');
+const { ApiKey, User } = require('../models/index');
 
 async function createApiKey(key, userId, transaction) {
   try {
@@ -34,15 +33,6 @@ async function getApiKeysByUserId(userId) {
   }
 }
 
-async function getApiKeyById(id) {
-  try {
-    return ApiKey.findByPk(id);
-  } catch (error) {
-    console.error('Error fetching api key by id:', error);
-    throw error;
-  }
-}
-
 async function getApiKeyByKey(key) {
   try {
     return ApiKey.findOne({
@@ -65,46 +55,9 @@ async function deleteApiKey(id) {
   }
 }
 
-async function deactivateUserApiKeys(userId, transaction) {
-  try {
-    // Step 1: Find the most recently created API key for the user
-    const mostRecentApiKey = await ApiKey.findOne({
-      where: {
-        userId: userId,
-        status: true,
-      },
-      order: [['createdAt', 'DESC']], // Order by createdAt in descending order
-      transaction,
-    });
-
-    // Step 2: If there is a most recent API key, deactivate all others
-    if (mostRecentApiKey) {
-      return ApiKey.update(
-        { status: 0 }, // Deactivate the keys
-        {
-          where: {
-            userId: userId,
-            status: true,
-            id: { [Op.ne]: mostRecentApiKey.id }, // Exclude the most recent API key
-          },
-          transaction,
-        }
-      );
-    }
-
-    // If no active API keys found, return null or handle as needed
-    return null;
-  } catch (error) {
-    console.error('Error deactivating user api keys:', error);
-    throw error;
-  }
-}
-
 module.exports = {
   createApiKey,
   getApiKeyByKey,
-  getApiKeyById,
   getApiKeysByUserId,
   deleteApiKey,
-  deactivateUserApiKeys,
 };

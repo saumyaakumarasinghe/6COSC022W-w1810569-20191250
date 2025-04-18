@@ -1,9 +1,4 @@
-const {
-  ApiKeyInteraction,
-  ApiKey,
-  User,
-  sequelize,
-} = require('../models/index');
+const { ApiKeyInteraction, User } = require('../models/index');
 
 async function createApiKeyInteraction(apiKeyId, userId, log) {
   try {

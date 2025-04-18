@@ -103,36 +103,3 @@ paths:
           description: Forbidden. The API key or JWT token does not have permission to access this resource.
         500:
           description: Internal server error. An error occurred while processing the request.
-
-components:
-  schemas:
-    ApiKey:
-      type: object
-      properties:
-        id:
-          type: integer
-        key:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-
-    ApiKeyWithUser:
-      allOf:
-        - $ref: '#/components/schemas/ApiKey'
-        - type: object
-          properties:
-            User:
-              $ref: '#/components/schemas/UserBasic'
-
-    UserBasic:
-      type: object
-      properties:
-        id:
-          type: integer
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string

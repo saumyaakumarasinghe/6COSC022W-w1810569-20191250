@@ -1,6 +1,6 @@
 const express = require('express');
 const userService = require('../../services/user.service');
-const checkPermissions = require('../../middleware/permission-check.middleware'); // Import default export
+const checkPermissions = require('../../middleware/permission-check.middleware');
 const { ROLE } = require('../../constants');
 const userRoutes = express.Router();
 

@@ -70,7 +70,7 @@ async function updateUser(userId, userData) {
 async function deleteUser(userId) {
   const transaction = await sequelize.transaction();
   try {
-    // First, find all API keys associated with this user
+    // Find all API keys associated with this user
     const apiKeys = await ApiKey.findAll({
       where: { userId },
       transaction,
@@ -84,13 +84,13 @@ async function deleteUser(userId) {
       });
     }
 
-    // Now delete all API keys for this user
+    // Delete all API keys for this user
     await ApiKey.destroy({
       where: { userId },
       transaction,
     });
 
-    // Finally delete the user
+    // Delete the user
     const result = await User.destroy({
       where: { id: userId },
       transaction,
